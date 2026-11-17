@@ -1,4 +1,6 @@
-# ♻️ EcoFilament — From Plastic Waste to 3D Printing Filament
+
+# ♻️ EcoFilament
+### From Plastic Waste to 3D Printing Filament
 
 <p align="center">
   <strong>Turning an environmental challenge into a technological opportunity.</strong>
@@ -9,10 +11,21 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Project-EcoFilament-00bcd4?style=for-the-badge" alt="EcoFilament Project">
-  <img src="https://img.shields.io/badge/Technology-HTML%20%7C%20CSS%20%7C%20JavaScript-blue?style=for-the-badge" alt="Technologies">
-  <img src="https://img.shields.io/badge/3D-Three.js-black?style=for-the-badge&logo=threedotjs" alt="Three.js">
-  <img src="https://img.shields.io/badge/Status-Educational%20Project-green?style=for-the-badge" alt="Educational Project">
+  <img src="https://img.shields.io/badge/Project-EcoFilament-00bcd4?style=for-the-badge" alt="EcoFilament">
+  <img src="https://img.shields.io/badge/HTML5-Structure-orange?style=for-the-badge&logo=html5" alt="HTML5">
+  <img src="https://img.shields.io/badge/CSS3-Design-blue?style=for-the-badge&logo=css3" alt="CSS3">
+  <img src="https://img.shields.io/badge/JavaScript-Logic-yellow?style=for-the-badge&logo=javascript" alt="JavaScript">
+  <img src="https://img.shields.io/badge/Three.js-3D%20Visualization-black?style=for-the-badge&logo=threedotjs" alt="Three.js">
+</p>
+
+<p align="center">
+  <a href="https://yassir050.github.io/EcoFilament/">
+    <strong>🚀 View Live Presentation</strong>
+  </a>
+  &nbsp; • &nbsp;
+  <a href="https://github.com/Yassir050/EcoFilament">
+    <strong>📂 GitHub Repository</strong>
+  </a>
 </p>
 
 ---
@@ -21,41 +34,45 @@
 
 **EcoFilament** is an interactive educational presentation exploring how suitable plastic waste could be reused as material for **3D printing filament**.
 
-The project connects environmental awareness with modern technology, introducing the concept of plastic recycling, material reuse, and additive manufacturing through an engaging digital experience.
+The project combines environmental awareness with modern technology, introducing plastic recycling, material reuse, and additive manufacturing through an interactive digital experience.
 
-🎯 **Main objective:** Show how innovation can help give selected plastic waste a second life.
+### 🎯 Main Objective
 
-## ✨ Features
+Demonstrate how innovation and responsible material reuse can help give selected plastic waste a second life.
 
-- 🌐 **Bilingual experience** — English and Arabic display modes.
-- 🎨 **Modern interface** — dark technology-inspired design.
-- 🧊 **Interactive 3D scene** — explore the recycling concept with Three.js.
-- 🎮 **Presentation navigation** — move between sections using buttons or keyboard arrows.
-- 🖥️ **Fullscreen mode** — designed for classroom presentations.
-- 🧠 **Interactive quiz** — test what you learned.
-- 📱 **Responsive layout** — adapts to desktop, tablet, and mobile screens.
-- ♿ **Accessibility refinements** — keyboard focus and reduced-motion support.
+## ✨ Key Features
+
+| Feature | Description |
+|---|---|
+| 🌐 Bilingual Interface | Switch between English and Arabic |
+| 🎨 Eco-Tech Design | Modern technology-inspired visual experience |
+| 🧊 Interactive 3D Scene | Explore the recycling concept using Three.js |
+| 🎮 Slide Navigation | Navigate using buttons and keyboard arrows |
+| 🖥️ Fullscreen Mode | Suitable for classroom presentations |
+| 🧠 Interactive Quiz | Test knowledge through five questions |
+| 📱 Responsive Layout | Designed for desktop, tablet, and mobile |
+| ♿ Accessibility | Keyboard navigation and reduced-motion support |
 
 ## 🧪 The Concept
 
-The presentation introduces the main stages of the recycling concept:
+The presentation introduces six conceptual stages:
 
-1. ♻️ **Collection** — gathering suitable plastic waste.
-2. 🔍 **Sorting** — identifying and separating plastic types.
-3. 🧼 **Cleaning** — preparing selected material for further processing.
-4. 🧵 **Filament production** — illustrating the transformation into a filament.
-5. ✅ **Quality control** — checking material consistency and suitability.
-6. 🖨️ **3D Printing** — exploring possible applications.
+1. ♻️ **Collection** — Gathering suitable plastic waste.
+2. 🔍 **Sorting** — Identifying and separating plastic types.
+3. 🧼 **Cleaning** — Preparing selected materials for further processing.
+4. 🧵 **Filament Production** — Introducing the transformation into 3D printing filament.
+5. ✅ **Quality Control** — Checking consistency and material suitability.
+6. 🖨️ **3D Printing** — Exploring potential applications.
 
-> ⚠️ This is an educational concept, not a practical processing guide. Real plastic processing requires material identification, appropriate equipment, trained supervision, and controlled conditions.
+> ⚠️ **Educational Disclaimer:** EcoFilament is an educational concept and visualization, not a practical plastic-processing guide. Real material processing requires appropriate equipment, material identification, trained supervision, and controlled conditions.
 
-## 🛠️ Built With
+## 🛠️ Technologies
 
-| Technology | Purpose |
+| Technology | Role |
 |---|---|
 | HTML5 | Presentation structure |
-| CSS3 | Design, animations, and responsive layout |
-| JavaScript | Navigation, language controls, and quiz |
+| CSS3 | Visual design, animations, and responsive layout |
+| JavaScript | Navigation, language switching, and quiz functionality |
 | Three.js | Interactive 3D visualization |
 
 ## 📂 Project Structure
@@ -77,55 +94,70 @@ EcoFilament/
 
 ## 🚀 Getting Started
 
-### Option 1 — Run Locally
+### Run Locally
 
-1. Download or clone this repository.
-2. Open the project folder in Visual Studio Code.
-3. Launch `index.html` using a local development server, such as Live Server.
-4. Make sure you have an internet connection for the Three.js CDN.
-5. Start exploring EcoFilament!
+1. Clone the repository:
 
-### Option 2 — GitHub Pages
+   ```bash
+   git clone https://github.com/Yassir050/EcoFilament.git
+   ```
 
-You can publish the presentation using GitHub Pages:
+2. Open the project folder:
 
-1. Open the repository **Settings**.
-2. Select **Pages**.
-3. Under **Build and deployment**, choose **Deploy from a branch**.
-4. Select the `main` branch and `/ (root)` folder.
-5. Save and wait for deployment.
+   ```bash
+   cd EcoFilament
+   ```
+
+3. Open the folder in Visual Studio Code.
+
+4. Launch the project using a local development server, such as Live Server.
+
+5. Open the local URL provided by the development server.
+
+**Note:** An internet connection is required to load Three.js from the CDN.
+
+### Deploy with GitHub Pages
+
+1. Open the repository on GitHub.
+2. Navigate to **Settings → Pages**.
+3. Under **Build and deployment**, select **Deploy from a branch**.
+4. Choose the `main` branch and `/ (root)` folder.
+5. Click **Save**.
+6. Wait for GitHub Pages to publish the website.
 
 ## 🎮 Presentation Controls
 
 | Control | Action |
 |---|---|
 | ⬅️ Previous / ➡️ Next | Navigate between slides |
-| ⌨️ Arrow keys | Move through the presentation |
-| 🌐 Language button | Switch between English and Arabic |
-| 🖱️ Drag | Rotate the 3D scene |
-| 🔎 Mouse wheel | Zoom in and out |
+| ⌨️ Arrow Keys | Move through the presentation |
+| 🌐 Language Button | Switch between English and Arabic |
+| 🖱️ Mouse Drag | Rotate the 3D scene |
+| 🔎 Mouse Wheel | Zoom in and out |
 | ⛶ Fullscreen | Enter or exit fullscreen |
-| 🧠 Quiz | Test your knowledge |
+| 🧠 Interactive Quiz | Test your knowledge |
 
 ## 🎯 Project Goals
 
 - 🌍 Raise awareness about plastic waste.
-- ♻️ Introduce the idea of material reuse.
-- 🧪 Explore the relationship between recycling and technology.
+- ♻️ Introduce the concept of material reuse.
+- 🧪 Explore the connection between recycling and technology.
 - 🖨️ Present potential applications of recycled materials in 3D printing.
-- 💡 Encourage creative thinking and environmental responsibility.
+- 💡 Encourage creativity and environmental responsibility.
 
 ## 🔮 Future Improvements
 
 - ✨ More detailed 3D animations.
-- 🎞️ Improved visual transitions.
-- 🌍 Additional languages.
-- 📊 More educational content and interactive activities.
-- 📱 Further mobile experience improvements.
+- 🎞️ Advanced transitions and visual effects.
+- 🌍 Additional language support.
+- 📊 More interactive educational activities.
+- 📱 Further mobile performance improvements.
+- 🧊 Expanded 3D visualization and interaction.
 
 ## 👨‍💻 Author
 
-**Yassir** — Student & Technology Enthusiast
+**Yassir**  
+Student • Technology Enthusiast
 
 Interested in programming, emerging technologies, 3D visualization, and environmental innovation.
 
