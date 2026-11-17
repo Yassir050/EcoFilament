@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07111d">
+<title>EcoTech | From Plastic Waste to 3D Printing Filament</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="lang-both">
+<header class="topbar">
+  <div class="brand">ECO<span>TECH</span> / PRESENTATION</div>
+  <div class="tools">
+    <button class="tool" id="langBtn" type="button" title="Switch language" aria-label="Switch language">EN / AR</button>
+    <button class="tool" id="timerBtn" type="button" aria-label="Start or pause presentation timer">⏱ <span class="timer" id="timer" role="timer" aria-label="10 minutes remaining">10:00</span></button>
+    <button class="tool" id="fullBtn" type="button" aria-label="Toggle fullscreen">⛶ Fullscreen</button>
+  </div>
+</header>
+<div class="progress-wrap"><div class="progress" id="progress"></div></div>
+<main id="presentation" aria-label="Interactive presentation">
+<section class="slide active" data-title="Welcome" aria-label="Welcome" aria-hidden="false">
+  <div class="hero">
+    <div>
+      <div class="kicker">Environmental innovation · 10 minutes</div>
+      <h1><span class="gradient">FROM PLASTIC WASTE</span><br>TO 3D PRINTING FILAMENT</h1>
+      <p class="lead">Turning an environmental problem into a technological opportunity.</p>
+      <div class="bilingual"><p class="ar">تحويل مشكلة بيئية إلى فرصة تكنولوجية.</p></div>
+      <div class="quote bilingual"><div class="en">What if a plastic bottle could become something useful again?</div><div class="ar">ماذا لو أمكن للقنينة البلاستيكية أن تتحول إلى شيء مفيد من جديد؟</div></div>
+      <button class="action primary" onclick="nextSlide()">Start presentation →</button>
+    </div>
+    <div class="hero-art" aria-label="Abstract 3D recycled material illustration"><div class="orbit"></div><div class="orbit two"></div><div class="orb"></div><div class="float-tag tag1">♻ Reuse</div><div class="float-tag tag2">3D Printing</div><div class="float-tag tag3">♧ Innovate</div></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Introduction">
+  <div class="kicker">01 / 0:00–1:00</div><h2>A new way to see <span class="gradient">plastic waste</span></h2>
+  <p class="sub">Good morning everyone! Let me start with a simple question: What happens to a plastic bottle after we throw it away?</p>
+  <div class="grid">
+    <div class="card"><div class="emoji">🗑️</div><h3>Waste?</h3><p>Most of the time, we consider it useless waste.</p></div>
+    <div class="card"><div class="emoji">💡</div><h3>A second life?</h3><p>But what if this bottle could become something useful again?</p></div>
+  </div>
+  <div class="panel bilingual" style="margin-top:16px"><p class="en">Today, I want to present an idea that connects environmental protection, recycling, and 3D printing. My project is called “From Plastic Waste to 3D Printing Filament.” The goal is simple: give suitable plastic waste a second life.</p><p class="ar">اليوم، أريد أن أقدم فكرة تجمع بين حماية البيئة وإعادة التدوير والطباعة ثلاثية الأبعاد. يحمل مشروعي عنوان «من النفايات البلاستيكية إلى خيوط الطباعة ثلاثية الأبعاد». الهدف بسيط: منح النفايات البلاستيكية المناسبة حياة ثانية.</p></div>
+</section>
+
+<section class="slide" data-title="The problem">
+  <div class="kicker">02 / 1:00–2:10</div><h2>Understanding the <span class="gradient">problem</span></h2>
+  <p class="sub bilingual"><span class="en">Plastic is everywhere in daily life: bottles, food packaging, shopping bags, and many other products. But poorly managed plastic waste can end up in streets, rivers, beaches, and oceans.</span><span class="ar">يوجد البلاستيك في كل مكان في حياتنا اليومية: القنينات وتغليف الأغذية وأكياس التسوق وغيرها. لكن النفايات البلاستيكية التي لا تتم إدارتها بشكل صحيح قد تصل إلى الشوارع والأنهار والشواطئ والمحيطات.</span></p>
+  <div class="grid three">
+    <div class="card"><div class="emoji">🌊</div><h3>Water pollution</h3><p>Plastic waste can reach rivers and oceans.</p></div>
+    <div class="card"><div class="emoji">🐢</div><h3>Wildlife</h3><p>It can harm animals and affect ecosystems.</p></div>
+    <div class="card"><div class="emoji">♻️</div><h3>Lost value</h3><p>Materials with potential value are often thrown away.</p></div>
+  </div>
+  <div class="quote bilingual"><div class="en">How can we reduce this waste and use it more intelligently?</div><div class="ar">كيف يمكننا تقليل هذه النفايات واستعمالها بطريقة أكثر ذكاءً؟</div></div>
+</section>
+
+<section class="slide" data-title="Our idea">
+  <div class="kicker">03 / 2:10–3:15</div><h2>Turning waste into a <span class="gradient">resource</span></h2>
+  <div class="panel bilingual"><p class="en">My proposal is to collect suitable plastic bottles, recycle their material, and transform it into filament for 3D printers. A 3D printer uses a special plastic filament to create objects layer by layer.</p><p class="ar">اقتراحي هو جمع القنينات البلاستيكية المناسبة وإعادة تدوير مادتها وتحويلها إلى خيوط للطابعات ثلاثية الأبعاد. تستعمل الطابعة ثلاثية الأبعاد خيطاً بلاستيكياً خاصاً لصناعة الأشياء طبقة بعد طبقة.</p></div>
+  <div class="flow"><span>Plastic bottles</span><i>→</i><span>Recycling</span><i>→</i><span>Filament</span><i>→</i><span>3D objects</span></div>
+  <div class="grid">
+    <div class="card"><div class="emoji">🧪</div><h3>Not all plastics</h3><p>Only suitable, identified and tested materials should be considered.</p></div>
+    <div class="card"><div class="emoji">🚀</div><h3>Innovation</h3><p>This connects recycling with education, engineering, design, and prototyping.</p></div>
+  </div>
+  <p class="footer-note bilingual"><span class="en">Our idea is not simply about recycling plastic; it is about connecting recycling with innovation.</span><span class="ar">فكرتنا لا تتعلق فقط بإعادة تدوير البلاستيك، بل بربط إعادة التدوير بالابتكار.</span></p>
+</section>
+
+<section class="slide" data-title="How it works">
+  <div class="kicker">04 / 3:15–5:20</div><h2>How does the idea <span class="gradient">work?</span></h2>
+  <p class="sub">The proposed process has six important stages.</p>
+  <div class="stage-list">
+    <div class="stage"><b>STAGE 01</b><h3>Collection</h3><p>Collect suitable bottles from homes, schools, and recycling points.</p></div>
+    <div class="stage"><b>STAGE 02</b><h3>Sorting</h3><p>Separate plastics by material type. Many beverage bottles are made from PET.</p></div>
+    <div class="stage"><b>STAGE 03</b><h3>Cleaning</h3><p>Clean and prepare selected plastic to remove unwanted materials.</p></div>
+    <div class="stage"><b>STAGE 04</b><h3>Filament production</h3><p>Specialized equipment processes material through controlled extrusion.</p></div>
+    <div class="stage"><b>STAGE 05</b><h3>Quality control</h3><p>Check consistency, diameter, and printing performance.</p></div>
+    <div class="stage"><b>STAGE 06</b><h3>3D printing</h3><p>Use the filament only if it meets standards and suits the printer.</p></div>
+  </div>
+  <div class="panel" style="margin-top:18px"><h3>Process at a glance</h3><div class="flow"><span>Collect</span><i>→</i><span>Sort</span><i>→</i><span>Clean</span><i>→</i><span>Extrude</span><i>→</i><span>Test</span><i>→</i><span>Print</span></div><p class="footer-note">Safety note: plastic processing should be done by trained people using suitable equipment and controlled conditions.</p></div>
+</section>
+
+<section class="slide" data-title="What can we make?">
+  <div class="kicker">05 / 5:20–6:15</div><h2>What can we create with <span class="gradient">recycled filament?</span></h2>
+  <p class="sub bilingual"><span class="en">The possibilities are interesting, especially in education. Students could use recycled filament to create educational models and simple prototypes.</span><span class="ar">الإمكانيات مثيرة للاهتمام، خصوصاً في مجال التعليم. يمكن للطلبة استعمال الخيوط المعاد تدويرها لصناعة نماذج تعليمية ونماذج أولية بسيطة.</span></p>
+  <div class="gallery">
+    <div class="visual"><div class="big">📐</div><div><h3>Geometric shapes</h3><small>Learn mathematics in 3D</small></div></div>
+    <div class="visual"><div class="big">🧬</div><div><h3>Science models</h3><small>Make abstract ideas tangible</small></div></div>
+    <div class="visual"><div class="big">⚙️</div><div><h3>Simple prototypes</h3><small>Explore design and engineering</small></div></div>
+  </div>
+  <div class="quote bilingual"><div class="en">Technology becomes a tool for environmental education.</div><div class="ar">تصبح التكنولوجيا وسيلة للتثقيف البيئي.</div></div>
+</section>
+
+<section class="slide" data-title="Benefits">
+  <div class="kicker">06 / 6:15–7:15</div><h2>The main <span class="gradient">benefits</span></h2>
+  <div class="grid">
+    <div class="card"><div class="number">01</div><h3>Less suitable waste</h3><p>Could reduce suitable plastic sent for disposal.</p></div>
+    <div class="card"><div class="number">02</div><h3>New purpose</h3><p>Give discarded materials another use.</p></div>
+    <div class="card"><div class="number">03</div><h3>Student creativity</h3><p>Encourage creativity and scientific thinking.</p></div>
+    <div class="card"><div class="number">04</div><h3>Technology + planet</h3><p>Connect environmental protection with modern technology.</p></div>
+  </div>
+  <div class="panel bilingual" style="margin-top:16px"><h3>♻ The circular economy</h3><p class="en">A circular economy means keeping materials in use for as long as possible instead of constantly throwing them away.</p><p class="ar">يعني الاقتصاد الدائري إبقاء المواد قيد الاستعمال لأطول فترة ممكنة بدلاً من التخلص منها باستمرار.</p></div>
+</section>
+
+<section class="slide" data-title="Challenges">
+  <div class="kicker">07 / 7:15–8:35</div><h2>Challenges & <span class="gradient">solutions</span></h2>
+  <div class="challenge">
+    <div class="card"><h3>01 · Different plastics</h3><p>Not every plastic is suitable.</p><p><b>Solution:</b> Identify, separate, and test materials first.</p></div>
+    <div class="card"><h3>02 · Filament quality</h3><p>Uneven diameter or poor quality may cause printing problems.</p><p><b>Solution:</b> Apply quality control and test the final product.</p></div>
+    <div class="card"><h3>03 · Equipment and costs</h3><p>Recycling equipment and energy can be expensive.</p><p><b>Solution:</b> Cooperate with schools, universities, and recycling centers.</p></div>
+    <div class="card"><h3>04 · Safety</h3><p>Plastic processing needs suitable equipment and controlled conditions.</p><p><b>Solution:</b> Trained people should work in appropriate facilities.</p></div>
+  </div>
+</section>
+
+<section class="slide" data-title="Future vision">
+  <div class="kicker">08 / 8:35–9:20</div><h2>Our <span class="gradient">future vision</span></h2>
+  <div class="hero" style="min-height:unset;grid-template-columns:1fr .8fr">
+    <div class="panel bilingual"><p class="en">Imagine a school where plastic waste is collected instead of being thrown away. Imagine students learning how to turn recycled materials into useful educational objects.</p><p class="ar">تخيلوا مدرسة يتم فيها جمع النفايات البلاستيكية بدلاً من رميها. وتخيلوا طلبة يتعلمون كيفية تحويل المواد المعاد تدويرها إلى أشياء تعليمية مفيدة.</p><p class="en">Our idea could begin as a small educational project and develop through cooperation with experts and recycling organizations.</p><p class="ar">يمكن أن تبدأ فكرتنا كمشروع تعليمي صغير وتتطور من خلال التعاون مع الخبراء ومؤسسات إعادة التدوير.</p></div>
+    <div class="hero-art" style="height:260px"><div class="orb" style="width:145px;height:145px"></div><div class="float-tag tag1">School</div><div class="float-tag tag2">Future</div></div>
+  </div>
+  <div class="quote">Make recycling more creative, useful, and connected to everyday life.</div>
+</section>
+
+<section class="slide" data-title="Conclusion">
+  <div class="kicker">09 / 9:20–10:00</div><h2>A second life for <span class="gradient">plastic</span></h2>
+  <div class="panel bilingual"><p class="en">To conclude, plastic pollution is a serious problem, but innovation can help us find better solutions. By recycling suitable plastic waste into 3D printing filament, we can explore a new way to reuse valuable materials.</p><p class="ar">في الختام، يُعد التلوث البلاستيكي مشكلة خطيرة، لكن الابتكار يمكن أن يساعدنا في إيجاد حلول أفضل. ومن خلال إعادة تدوير النفايات البلاستيكية المناسبة إلى خيوط للطباعة ثلاثية الأبعاد، يمكننا استكشاف طريقة جديدة لإعادة استعمال المواد ذات القيمة.</p><p class="en">Technology should not only make our lives easier; it should also help protect our planet.</p><p class="ar">لا ينبغي للتكنولوجيا أن تجعل حياتنا أسهل فقط، بل يجب أن تساعد أيضاً في حماية كوكبنا.</p></div>
+  <div class="quote" style="font-size:clamp(1.2rem,3vw,2rem);font-weight:900;text-align:center;border:0;background:linear-gradient(110deg,#54e5ff18,#9d8cff18)">REDUCE. REUSE. RECYCLE. INNOVATE.</div>
+  <p style="text-align:center;font-size:1.35rem;font-weight:800">Thank you for listening! 🌍</p><p class="ar" style="text-align:center">شكراً على حسن استماعكم! معاً، يمكننا تحويل النفايات إلى فرصة!</p>
+  <div style="text-align:center;margin-top:24px"><button class="action primary" onclick="goTo(10)">Continue to audience discussion →</button></div>
+</section>
+
+<section class="slide" data-title="Audience discussion">
+  <div class="kicker">INTERACTIVE MOMENT</div><h2>Let's hear <span class="gradient">your ideas</span></h2>
+  <p class="sub">Ask the audience these questions and invite a few short answers.</p>
+  <div class="discussion-q"><b>💬 Question 1</b><div class="bilingual"><p class="en">Have you ever seen plastic waste on a beach or in a public place?</p><p class="ar">هل سبق أن شاهدتم نفايات بلاستيكية على الشاطئ أو في مكان عام؟</p></div></div>
+  <div class="discussion-q"><b>💬 Question 2</b><div class="bilingual"><p class="en">What useful object would you like to create with a 3D printer?</p><p class="ar">ما الشيء المفيد الذي تودون صنعه باستعمال طابعة ثلاثية الأبعاد؟</p></div></div>
+  <div class="discussion-q"><b>💬 Question 3</b><div class="bilingual"><p class="en">Do you think schools should have recycling and technology projects?</p><p class="ar">هل تعتقدون أن المدارس يجب أن تنظم مشاريع تجمع بين إعادة التدوير والتكنولوجيا؟</p></div></div>
+  <p class="footer-note">Presenter tip: give the audience a moment to think before inviting answers.</p>
+  <div style="text-align:center;margin-top:22px"><button class="action primary" onclick="goTo(11)">Start the audience quiz →</button></div>
+</section>
+
+<section class="slide" data-title="Quiz">
+  <div class="kicker">KNOWLEDGE CHECK</div><h2>Quick <span class="gradient">quiz</span></h2>
+  <p class="sub">Choose the best answer. Your score updates as you go.</p>
+  <div class="panel" id="quizPanel">
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><b id="qCount">Question 1 of 5</b><b>Score: <span id="score" aria-live="polite">0</span>/5</b></div>
+    <div class="progress-wrap" style="margin:14px 0;border-radius:9px"><div class="progress" id="quizProgress"></div></div>
+    <h3 id="question" style="font-size:1.35rem;margin-top:20px"></h3>
+    <div id="options"></div><div class="feedback" id="feedback" aria-live="polite" role="status"></div>
+    <button class="action primary" id="nextQuestion" style="margin-top:10px" disabled>Next question →</button>
+  </div>
+  <div class="panel" id="resultPanel" hidden style="margin-top:18px;text-align:center"><div class="kicker">YOUR RESULT</div><div class="score" id="finalScore">0/5</div><h3 id="resultText">Great effort!</h3><p id="resultMessage" class="sub" style="margin:auto"></p><button class="action primary" onclick="restartQuiz()">Try again ↻</button></div>
+</section>
+</main>
+<script src="js/script.js" defer></script>
+</body>
+</html>
