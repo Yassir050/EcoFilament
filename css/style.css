@@ -342,7 +342,36 @@ button:focus-visible {
     outline: 2px solid var(--cyan);
     outline-offset: 3px;
 }
- 
+ /* FIX: LANGUAGE VISIBILITY */
+body.lang-en .ar {
+    display: none !important;
+}
+
+body.lang-ar .en {
+    display: none !important;
+}
+
+/* FIX: TEXT DIRECTION */
+body.lang-en {
+    direction: ltr;
+}
+
+body.lang-ar {
+    direction: rtl;
+}
+
+body.lang-ar .ar {
+    direction: rtl;
+    text-align: right;
+    unicode-bidi: plaintext;
+}
+
+body.lang-en .en {
+    direction: ltr;
+    text-align: left;
+    unicode-bidi: plaintext;
+}
+   
 }
 #timerBtn {
     display: none !important;
