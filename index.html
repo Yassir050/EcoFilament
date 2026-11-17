@@ -4,34 +4,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <meta name="theme-color" content="#07111d">
-  <meta name="description" content="EcoFilament: From Plastic Waste to 3D Printing Filament">
+  <meta name="description" content="Discover EcoFilament: an educational project exploring how suitable plastic waste can be recycled into filament for 3D printing.">
+  <meta name="author" content="EcoFilament">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" href="https://yassir050.github.io/EcoFilament/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="EcoFilament | From Plastic Waste to 3D Printing Filament">
+  <meta property="og:description" content="Turning suitable plastic waste into a technological opportunity through recycling and 3D printing.">
+  <meta property="og:url" content="https://yassir050.github.io/EcoFilament/">
+  <meta property="og:site_name" content="EcoFilament">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="EcoFilament">
+  <meta name="twitter:description" content="From Plastic Waste to 3D Printing Filament.">
+
   <title>EcoFilament | From Plastic Waste to 3D Printing Filament</title>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="css/style.css">
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
+    }
+  }
+  </script>
 </head>
 
 <body class="lang-en">
 
+<a class="skip-link" href="#presentation">
+  Skip to presentation
+</a>
+
 <header class="topbar">
-  <div class="brand">ECO<span>FILAMENT</span> / PRESENTATION</div>
+  <div class="brand" aria-label="EcoFilament presentation">
+    ECO<span>FILAMENT</span> / PRESENTATION
+  </div>
 
   <div class="tools">
-    <button class="tool" id="langBtn" type="button"
-      title="Switch language" aria-label="Switch language">العربية</button>
 
-    <button class="tool" id="timerBtn" type="button"
-      aria-label="Start or pause presentation timer">
-      ⏱ <span class="timer" id="timer" role="timer"
-      aria-label="10 minutes remaining">10:00</span>
+    <button
+      class="tool"
+      id="langBtn"
+      type="button"
+      title="Switch language"
+      aria-label="Switch language"
+      aria-pressed="false">
+      العربية
     </button>
 
-    <button class="tool" id="fullBtn" type="button"
-      aria-label="Toggle fullscreen">⛶ Fullscreen</button>
+    <button
+      class="tool"
+      id="timerBtn"
+      type="button"
+      aria-label="Start or pause presentation timer">
+      ⏱
+      <span
+        class="timer"
+        id="timer"
+        role="timer"
+        aria-label="10 minutes remaining">
+        10:00
+      </span>
+    </button>
+
+    <button
+      class="tool"
+      id="fullBtn"
+      type="button"
+      aria-label="Toggle fullscreen">
+      ⛶ Fullscreen
+    </button>
+
   </div>
 </header>
 
-<div class="progress-wrap">
+<div class="progress-wrap"
+  role="progressbar"
+  aria-label="Presentation progress"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  aria-valuenow="0"
+  id="presentationProgress">
+
   <div class="progress" id="progress"></div>
+
 </div>
 
 <main id="presentation" aria-label="Interactive presentation">
@@ -40,11 +103,15 @@
      SLIDE 1 — WELCOME
 ========================================= -->
 
-<section class="slide active" data-title="Welcome"
-  aria-label="Welcome" aria-hidden="false">
+<section class="slide active"
+  data-title="Welcome"
+  data-title-ar="الترحيب"
+  aria-label="Welcome"
+  aria-hidden="false">
 
   <div class="hero">
     <div>
+
       <div class="kicker bilingual">
         <span class="en">Environmental innovation · 10 minutes</span>
         <span class="ar">الابتكار البيئي · 10 دقائق</span>
@@ -55,6 +122,7 @@
           <span class="gradient">FROM PLASTIC WASTE</span><br>
           TO 3D PRINTING FILAMENT
         </span>
+
         <span class="ar">
           <span class="gradient">من النفايات البلاستيكية</span><br>
           إلى خيوط الطباعة ثلاثية الأبعاد
@@ -71,28 +139,44 @@
         <div class="ar">ماذا لو أمكن للقنينة البلاستيكية أن تتحول إلى شيء مفيد من جديد؟</div>
       </div>
 
-      <button class="action primary" onclick="nextSlide()">
+      <button class="action primary" onclick="nextSlide()" type="button">
         <span class="en">Start presentation →</span>
         <span class="ar">ابدأ العرض ←</span>
       </button>
+
     </div>
 
     <div class="hero-art" aria-label="Abstract 3D recycled material illustration">
       <div class="orbit"></div>
       <div class="orbit two"></div>
       <div class="orb"></div>
-      <div class="float-tag tag1">♻ <span class="en">Reuse</span><span class="ar">إعادة الاستخدام</span></div>
+
+      <div class="float-tag tag1">
+        ♻
+        <span class="en">Reuse</span>
+        <span class="ar">إعادة الاستخدام</span>
+      </div>
+
       <div class="float-tag tag2">3D Printing</div>
-      <div class="float-tag tag3">♧ <span class="en">Innovate</span><span class="ar">ابتكر</span></div>
+
+      <div class="float-tag tag3">
+        ♧
+        <span class="en">Innovate</span>
+        <span class="ar">ابتكر</span>
+      </div>
     </div>
+
   </div>
+
 </section>
 
 <!-- =========================================
      SLIDE 2 — INTRODUCTION
 ========================================= -->
 
-<section class="slide" data-title="Introduction">
+<section class="slide"
+  data-title="Introduction"
+  data-title-ar="المقدمة">
 
   <div class="kicker">01 / 0:00–1:00</div>
 
@@ -110,10 +194,12 @@
 
     <div class="card">
       <div class="emoji">🗑️</div>
+
       <h3 class="bilingual">
         <span class="en">Waste?</span>
         <span class="ar">مجرد نفايات؟</span>
       </h3>
+
       <p class="bilingual">
         <span class="en">Most of the time, we consider it useless waste.</span>
         <span class="ar">في معظم الأحيان، نعتبرها نفايات عديمة الفائدة.</span>
@@ -122,10 +208,12 @@
 
     <div class="card">
       <div class="emoji">💡</div>
+
       <h3 class="bilingual">
         <span class="en">A second life?</span>
         <span class="ar">حياة ثانية؟</span>
       </h3>
+
       <p class="bilingual">
         <span class="en">But what if this bottle could become something useful again?</span>
         <span class="ar">ولكن ماذا لو أمكن لهذه القنينة أن تصبح شيئاً مفيداً من جديد؟</span>
@@ -135,8 +223,11 @@
   </div>
 
   <div class="panel bilingual" style="margin-top:16px">
+
     <p class="en">Today, I want to present an idea that connects environmental protection, recycling, and 3D printing. My project is called “From Plastic Waste to 3D Printing Filament.” The goal is simple: give suitable plastic waste a second life.</p>
+
     <p class="ar">اليوم، أريد أن أقدم فكرة تجمع بين حماية البيئة وإعادة التدوير والطباعة ثلاثية الأبعاد. يحمل مشروعي عنوان «من النفايات البلاستيكية إلى خيوط الطباعة ثلاثية الأبعاد». الهدف بسيط: منح النفايات البلاستيكية المناسبة حياة ثانية.</p>
+
   </div>
 
 </section>
@@ -145,7 +236,9 @@
      SLIDE 3 — THE PROBLEM
 ========================================= -->
 
-<section class="slide" data-title="The problem">
+<section class="slide"
+  data-title="The problem"
+  data-title-ar="المشكلة">
 
   <div class="kicker">02 / 1:00–2:10</div>
 
@@ -163,10 +256,12 @@
 
     <div class="card">
       <div class="emoji">🌊</div>
+
       <h3 class="bilingual">
         <span class="en">Water pollution</span>
         <span class="ar">تلوث المياه</span>
       </h3>
+
       <p class="bilingual">
         <span class="en">Plastic waste can reach rivers and oceans.</span>
         <span class="ar">يمكن أن تصل النفايات البلاستيكية إلى الأنهار والمحيطات.</span>
@@ -175,10 +270,12 @@
 
     <div class="card">
       <div class="emoji">🐢</div>
+
       <h3 class="bilingual">
         <span class="en">Wildlife</span>
         <span class="ar">الحياة البرية</span>
       </h3>
+
       <p class="bilingual">
         <span class="en">It can harm animals and affect ecosystems.</span>
         <span class="ar">قد تضر بالحيوانات وتؤثر في الأنظمة البيئية.</span>
@@ -187,10 +284,12 @@
 
     <div class="card">
       <div class="emoji">♻️</div>
+
       <h3 class="bilingual">
         <span class="en">Lost value</span>
         <span class="ar">قيمة مهدرة</span>
       </h3>
+
       <p class="bilingual">
         <span class="en">Materials with potential value are often thrown away.</span>
         <span class="ar">غالباً ما يتم التخلص من مواد يمكن أن تكون لها قيمة وفائدة.</span>
@@ -210,7 +309,9 @@
      SLIDE 4 — OUR IDEA
 ========================================= -->
 
-<section class="slide" data-title="Our idea">
+<section class="slide"
+  data-title="Our idea"
+  data-title-ar="فكرتنا">
 
   <div class="kicker">03 / 2:10–3:15</div>
 
@@ -238,10 +339,12 @@
 
     <div class="card">
       <div class="emoji">🧪</div>
+
       <h3 class="bilingual">
         <span class="en">Not all plastics</span>
         <span class="ar">ليست كل أنواع البلاستيك مناسبة</span>
       </h3>
+
       <p class="bilingual">
         <span class="en">Only suitable, identified and tested materials should be considered.</span>
         <span class="ar">يجب اختيار المواد المناسبة التي تم تحديد نوعها واختبارها فقط.</span>
@@ -250,10 +353,12 @@
 
     <div class="card">
       <div class="emoji">🚀</div>
+
       <h3 class="bilingual">
         <span class="en">Innovation</span>
         <span class="ar">الابتكار</span>
       </h3>
+
       <p class="bilingual">
         <span class="en">This connects recycling with education, engineering, design, and prototyping.</span>
         <span class="ar">تربط هذه الفكرة إعادة التدوير بالتعليم والهندسة والتصميم وصناعة النماذج الأولية.</span>
@@ -273,7 +378,9 @@
      SLIDE 5 — HOW IT WORKS
 ========================================= -->
 
-<section class="slide" data-title="How it works">
+<section class="slide"
+  data-title="How it works"
+  data-title-ar="كيف تعمل الفكرة">
 
   <div class="kicker">04 / 3:15–5:20</div>
 
@@ -290,26 +397,37 @@
   <div class="scene3d-panel">
 
     <div class="scene3d-header">
+
       <div>
         <span class="kicker bilingual">
           <span class="en">INTERACTIVE 3D EXPERIENCE</span>
           <span class="ar">تجربة ثلاثية الأبعاد تفاعلية</span>
         </span>
+
         <h3 class="bilingual">
           <span class="en">From Waste to Filament</span>
           <span class="ar">من النفايات إلى الخيوط البلاستيكية</span>
         </h3>
       </div>
 
-      <span class="scene3d-status">● <span class="en">3D READY</span><span class="ar">جاهز ثلاثي الأبعاد</span></span>
+      <span class="scene3d-status">
+        ●
+        <span class="en">3D READY</span>
+        <span class="ar">جاهز ثلاثي الأبعاد</span>
+      </span>
+
     </div>
 
-    <div id="plastic-scene"
+    <div
+      id="plastic-scene"
+      role="img"
       aria-label="Interactive 3D plastic recycling scene">
+
       <p class="scene3d-fallback bilingual">
         <span class="en">Loading interactive 3D scene…</span>
         <span class="ar">جارٍ تحميل المشهد ثلاثي الأبعاد...</span>
       </p>
+
     </div>
 
     <p class="scene3d-hint bilingual">
@@ -411,7 +529,9 @@
      SLIDE 6 — WHAT CAN WE MAKE?
 ========================================= -->
 
-<section class="slide" data-title="What can we make?">
+<section class="slide"
+  data-title="What can we make?"
+  data-title-ar="ماذا يمكننا أن نصنع؟">
 
   <div class="kicker">05 / 5:20–6:15</div>
 
@@ -464,7 +584,9 @@
      SLIDE 7 — BENEFITS
 ========================================= -->
 
-<section class="slide" data-title="Benefits">
+<section class="slide"
+  data-title="Benefits"
+  data-title-ar="الفوائد">
 
   <div class="kicker">06 / 6:15–7:15</div>
 
@@ -525,7 +647,9 @@
      SLIDE 8 — CHALLENGES
 ========================================= -->
 
-<section class="slide" data-title="Challenges">
+<section class="slide"
+  data-title="Challenges"
+  data-title-ar="التحديات والحلول">
 
   <div class="kicker">07 / 7:15–8:35</div>
 
@@ -568,7 +692,9 @@
      SLIDE 9 — FUTURE VISION
 ========================================= -->
 
-<section class="slide" data-title="Future vision">
+<section class="slide"
+  data-title="Future vision"
+  data-title-ar="الرؤية المستقبلية">
 
   <div class="kicker">08 / 8:35–9:20</div>
 
@@ -589,8 +715,16 @@
 
     <div class="hero-art" style="height:260px">
       <div class="orb" style="width:145px;height:145px"></div>
-      <div class="float-tag tag1"><span class="en">School</span><span class="ar">المدرسة</span></div>
-      <div class="float-tag tag2"><span class="en">Future</span><span class="ar">المستقبل</span></div>
+
+      <div class="float-tag tag1">
+        <span class="en">School</span>
+        <span class="ar">المدرسة</span>
+      </div>
+
+      <div class="float-tag tag2">
+        <span class="en">Future</span>
+        <span class="ar">المستقبل</span>
+      </div>
     </div>
 
   </div>
@@ -606,7 +740,9 @@
      SLIDE 10 — CONCLUSION
 ========================================= -->
 
-<section class="slide" data-title="Conclusion">
+<section class="slide"
+  data-title="Conclusion"
+  data-title-ar="الخاتمة">
 
   <div class="kicker">09 / 9:20–10:00</div>
 
@@ -625,8 +761,10 @@
 
   <div class="quote"
     style="font-size:clamp(1.2rem,3vw,2rem);font-weight:900;text-align:center;border:0;background:linear-gradient(110deg,#54e5ff18,#9d8cff18)">
+
     <span class="en">REDUCE. REUSE. RECYCLE. INNOVATE.</span>
     <span class="ar">قلّل. أعد الاستخدام. أعد التدوير. ابتكر.</span>
+
   </div>
 
   <p class="bilingual" style="text-align:center;font-size:1.35rem;font-weight:800">
@@ -639,7 +777,7 @@
   </div>
 
   <div style="text-align:center;margin-top:24px">
-    <button class="action primary" onclick="goTo(10)">
+    <button class="action primary" onclick="goTo(10)" type="button">
       <span class="en">Continue to audience discussion →</span>
       <span class="ar">الانتقال إلى مناقشة الجمهور ←</span>
     </button>
@@ -651,7 +789,9 @@
      SLIDE 11 — AUDIENCE DISCUSSION
 ========================================= -->
 
-<section class="slide" data-title="Audience discussion">
+<section class="slide"
+  data-title="Audience discussion"
+  data-title-ar="مناقشة الجمهور">
 
   <div class="kicker bilingual">
     <span class="en">INTERACTIVE MOMENT</span>
@@ -698,7 +838,7 @@
   </p>
 
   <div style="text-align:center;margin-top:22px">
-    <button class="action primary" onclick="goTo(11)">
+    <button class="action primary" onclick="goTo(11)" type="button">
       <span class="en">Start the audience quiz →</span>
       <span class="ar">ابدأ اختبار الجمهور ←</span>
     </button>
@@ -710,7 +850,9 @@
      SLIDE 12 — QUIZ
 ========================================= -->
 
-<section class="slide" data-title="Quiz">
+<section class="slide"
+  data-title="Quiz"
+  data-title-ar="الاختبار">
 
   <div class="kicker bilingual">
     <span class="en">KNOWLEDGE CHECK</span>
@@ -741,8 +883,17 @@
 
     </div>
 
-    <div class="progress-wrap" style="margin:14px 0;border-radius:9px">
+    <div class="progress-wrap"
+      style="margin:14px 0;border-radius:9px"
+      role="progressbar"
+      aria-label="Quiz progress"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+      id="quizProgressWrap">
+
       <div class="progress" id="quizProgress"></div>
+
     </div>
 
     <h3 id="question" style="font-size:1.35rem;margin-top:20px"></h3>
@@ -751,14 +902,21 @@
 
     <div class="feedback" id="feedback" aria-live="polite" role="status"></div>
 
-    <button class="action primary" id="nextQuestion"
-      style="margin-top:10px" disabled>
+    <button
+      class="action primary"
+      id="nextQuestion"
+      style="margin-top:10px"
+      type="button"
+      disabled>
       Next question →
     </button>
 
   </div>
 
-  <div class="panel" id="resultPanel" hidden
+  <div
+    class="panel"
+    id="resultPanel"
+    hidden
     style="margin-top:18px;text-align:center">
 
     <div class="kicker bilingual">
@@ -772,7 +930,7 @@
 
     <p id="resultMessage" class="sub" style="margin:auto"></p>
 
-    <button class="action primary" onclick="restartQuiz()">
+    <button class="action primary" onclick="restartQuiz()" type="button">
       <span class="en">Try again ↻</span>
       <span class="ar">أعد المحاولة ↻</span>
     </button>
@@ -784,15 +942,6 @@
 </main>
 
 <script src="js/script.js" defer></script>
-
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
-  }
-}
-</script>
-
 <script type="module" src="js/scene3d.js"></script>
 
 </body>
