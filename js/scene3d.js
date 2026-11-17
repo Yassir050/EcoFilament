@@ -5,6 +5,11 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
 (() => {
   "use strict";
 
+  // =========================================
+  // ECOFILAMENT — INTERACTIVE 3D SCENE
+  // Three.js 0.180.0
+  // =========================================
+
   const container = document.getElementById("plastic-scene");
 
   if (!container) {
@@ -12,30 +17,68 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
     return;
   }
 
+  // Prevent duplicate initialization
+  if (container.dataset.sceneInitialized === "true") {
+    return;
+  }
+
+  container.dataset.sceneInitialized = "true";
+
   // =========================================
   // CONFIGURATION
   // =========================================
 
   const CONFIG = {
     background: 0x081321,
+
     cyan: 0x20d9ff,
     violet: 0x9667ff,
     green: 0x48e7c1,
-    maxPixelRatio: 1.75,
+
+    maxPixelRatio: 1.5,
+
     reducedMotion: window.matchMedia(
       "(prefers-reduced-motion: reduce)"
-    ).matches
+    ).matches,
+
+    particleCount: 70,
+    flakeCount: 32,
+
+    cameraPosition: {
+      x: 8.5,
+      y: 6.2,
+      z: 12
+    }
   };
 
-  let renderer;
+  let renderer = null;
+  let controls = null;
+
   let animationFrame = null;
+
   let isVisible = true;
   let isPageVisible = !document.hidden;
+
   let disposed = false;
+  let contextLost = false;
+
+  let lastPixelRatio = 0;
+
+  const clock = new THREE.Clock();
+
+  // =========================================
+  // SCENE
+  // =========================================
 
   const scene = new THREE.Scene();
+
   scene.background = new THREE.Color(CONFIG.background);
-  scene.fog = new THREE.Fog(CONFIG.background, 15, 30);
+
+  scene.fog = new THREE.Fog(
+    CONFIG.background,
+    15,
+    30
+  );
 
   // =========================================
   // CAMERA
@@ -48,7 +91,12 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
     100
   );
 
-  camera.position.set(8.5, 6.2, 12);
+  camera.position.set(
+    CONFIG.cameraPosition.x,
+    CONFIG.cameraPosition.y,
+    CONFIG.cameraPosition.z
+  );
+
   camera.lookAt(0, 0.9, 0);
 
   // =========================================
@@ -62,20 +110,36 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
       powerPreference: "high-performance"
     });
   } catch (error) {
-    console.error("EcoFilament: WebGL initialization failed.", error);
+    console.error(
+      "EcoFilament: WebGL initialization failed.",
+      error
+    );
 
-    container.innerHTML =
-      "<p>3D scene is not available in this browser.</p>";
+    container.dataset.sceneInitialized = "false";
+
+    container.replaceChildren();
+
+    const message = document.createElement("p");
+
+    message.textContent =
+      "3D scene is not available in this browser.";
+
+    container.appendChild(message);
 
     return;
   }
 
   renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio || 1, CONFIG.maxPixelRatio)
+    Math.min(
+      window.devicePixelRatio || 1,
+      CONFIG.maxPixelRatio
+    )
   );
 
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
   renderer.toneMappingExposure = 1.2;
 
   renderer.domElement.setAttribute(
@@ -87,19 +151,23 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   renderer.domElement.style.width = "100%";
   renderer.domElement.style.height = "100%";
 
+  renderer.domElement.style.touchAction = "pan-y";
+
   container.replaceChildren(renderer.domElement);
 
   // =========================================
   // CONTROLS
   // =========================================
 
-  const controls = new OrbitControls(
+  controls = new OrbitControls(
     camera,
     renderer.domElement
   );
 
-  controls.enableDamping = true;
+  controls.enableDamping = !CONFIG.reducedMotion;
+
   controls.dampingFactor = 0.055;
+
   controls.enablePan = false;
 
   controls.minDistance = 7;
@@ -110,17 +178,19 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
 
   controls.target.set(0, 0.85, 0);
 
+  controls.update();
+
   // =========================================
   // LIGHTING
   // =========================================
 
-  scene.add(
-    new THREE.HemisphereLight(
-      0xc7edff,
-      0x142033,
-      2.1
-    )
+  const hemisphereLight = new THREE.HemisphereLight(
+    0xc7edff,
+    0x142033,
+    2.1
   );
+
+  scene.add(hemisphereLight);
 
   const mainLight = new THREE.DirectionalLight(
     0xffffff,
@@ -128,6 +198,7 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   );
 
   mainLight.position.set(5, 9, 7);
+
   scene.add(mainLight);
 
   const cyanLight = new THREE.PointLight(
@@ -137,6 +208,7 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   );
 
   cyanLight.position.set(-5, 3, 4);
+
   scene.add(cyanLight);
 
   const violetLight = new THREE.PointLight(
@@ -146,6 +218,7 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   );
 
   violetLight.position.set(4, 3, -5);
+
   scene.add(violetLight);
 
   const frontLight = new THREE.PointLight(
@@ -155,6 +228,7 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   );
 
   frontLight.position.set(0, 5, 9);
+
   scene.add(frontLight);
 
   // =========================================
@@ -163,6 +237,7 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
 
   const ground = new THREE.Mesh(
     new THREE.CircleGeometry(11, 96),
+
     new THREE.MeshStandardMaterial({
       color: 0x0b1a2b,
       roughness: 0.85,
@@ -172,6 +247,7 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
 
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = -0.09;
+
   scene.add(ground);
 
   const grid = new THREE.GridHelper(
@@ -182,8 +258,10 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   );
 
   grid.position.y = -0.075;
+
   grid.material.transparent = true;
   grid.material.opacity = 0.24;
+
   scene.add(grid);
 
   // =========================================
@@ -192,12 +270,16 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
 
   const bottleMaterial = new THREE.MeshPhysicalMaterial({
     color: 0x83e4ed,
+
     roughness: 0.13,
     metalness: 0.02,
+
     transmission: 0.3,
     transparent: true,
     opacity: 0.88,
+
     thickness: 0.7,
+
     clearcoat: 1,
     clearcoatRoughness: 0.08
   });
@@ -222,14 +304,16 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
 
   const filamentMaterial = new THREE.MeshStandardMaterial({
     color: CONFIG.green,
+
     roughness: 0.27,
     metalness: 0.2,
+
     emissive: 0x063b34,
     emissiveIntensity: 0.65
   });
 
   // =========================================
-  // 01 — REALISTIC PLASTIC BOTTLE
+  // 01 — PLASTIC BOTTLE
   // =========================================
 
   const bottleGroup = new THREE.Group();
@@ -261,16 +345,23 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   );
 
   bottle.position.y = 0.05;
+
   bottleGroup.add(bottle);
 
-  // Bottle neck ring
+  // Neck ring
   const neckRing = new THREE.Mesh(
-    new THREE.TorusGeometry(0.205, 0.035, 12, 48),
+    new THREE.TorusGeometry(
+      0.205,
+      0.035,
+      12,
+      48
+    ),
     capMaterial
   );
 
   neckRing.rotation.x = Math.PI / 2;
   neckRing.position.y = 2.55;
+
   bottleGroup.add(neckRing);
 
   // Bottle cap
@@ -285,17 +376,24 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   );
 
   cap.position.y = 2.85;
+
   bottleGroup.add(cap);
 
   // Cap details
+  const grooveMaterial = new THREE.MeshStandardMaterial({
+    color: 0x078da8
+  });
+
   for (let i = 0; i < 12; i++) {
     const angle = (i / 12) * Math.PI * 2;
 
     const groove = new THREE.Mesh(
-      new THREE.BoxGeometry(0.018, 0.17, 0.018),
-      new THREE.MeshStandardMaterial({
-        color: 0x078da8
-      })
+      new THREE.BoxGeometry(
+        0.018,
+        0.17,
+        0.018
+      ),
+      grooveMaterial
     );
 
     groove.position.set(
@@ -308,6 +406,7 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   }
 
   bottleGroup.position.set(-5, 0, 0);
+
   scene.add(bottleGroup);
 
   // =========================================
@@ -322,17 +421,15 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
     0.18
   );
 
-  const flakeCount = 32;
-
   const flakes = new THREE.InstancedMesh(
     flakeGeometry,
     flakeMaterial,
-    flakeCount
+    CONFIG.flakeCount
   );
 
   const dummy = new THREE.Object3D();
 
-  for (let i = 0; i < flakeCount; i++) {
+  for (let i = 0; i < CONFIG.flakeCount; i++) {
     dummy.position.set(
       (Math.random() - 0.5) * 1.8,
       0.45 + Math.random() * 1.7,
@@ -346,19 +443,22 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
     );
 
     const scale = 0.65 + Math.random() * 0.8;
+
     dummy.scale.setScalar(scale);
 
     dummy.updateMatrix();
+
     flakes.setMatrixAt(i, dummy.matrix);
   }
 
   flakes.instanceMatrix.needsUpdate = true;
+
   flakesGroup.add(flakes);
 
   scene.add(flakesGroup);
 
   // =========================================
-  // 03 — PREMIUM FILAMENT SPOOL
+  // 03 — FILAMENT SPOOL
   // =========================================
 
   const spoolGroup = new THREE.Group();
@@ -370,6 +470,7 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
       1.05,
       64
     ),
+
     new THREE.MeshStandardMaterial({
       color: 0x273b57,
       metalness: 0.6,
@@ -378,8 +479,10 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   );
 
   spoolCore.rotation.x = Math.PI / 2;
+
   spoolGroup.add(spoolCore);
 
+  // Flanges
   const flangeGeometry = new THREE.CylinderGeometry(
     1,
     1,
@@ -394,13 +497,16 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
 
   flangeA.rotation.x = Math.PI / 2;
   flangeA.position.z = -0.59;
+
   spoolGroup.add(flangeA);
 
   const flangeB = flangeA.clone();
+
   flangeB.position.z = 0.59;
+
   spoolGroup.add(flangeB);
 
-  // Decorative inner rings
+  // Decorative rings
   const innerRingGeometry = new THREE.TorusGeometry(
     0.67,
     0.018,
@@ -420,10 +526,13 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   );
 
   innerRingA.position.z = -0.67;
+
   spoolGroup.add(innerRingA);
 
   const innerRingB = innerRingA.clone();
+
   innerRingB.position.z = 0.67;
+
   spoolGroup.add(innerRingB);
 
   // Filament coils
@@ -431,10 +540,12 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
 
   for (let i = 0; i < coilCount; i++) {
     const radius = 0.53 + i * 0.029;
+
     const points = [];
 
     for (let j = 0; j <= 180; j++) {
       const t = j / 180;
+
       const angle = t * Math.PI * 10;
 
       points.push(
@@ -463,6 +574,7 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   }
 
   spoolGroup.position.set(5, 1.05, 0);
+
   scene.add(spoolGroup);
 
   // =========================================
@@ -482,6 +594,16 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
     routePoints
   );
 
+  const routeMaterial = new THREE.MeshStandardMaterial({
+    color: CONFIG.cyan,
+
+    emissive: 0x08778a,
+    emissiveIntensity: 1.25,
+
+    roughness: 0.25,
+    metalness: 0.2
+  });
+
   const route = new THREE.Mesh(
     new THREE.TubeGeometry(
       routeCurve,
@@ -490,13 +612,7 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
       10,
       false
     ),
-    new THREE.MeshStandardMaterial({
-      color: CONFIG.cyan,
-      emissive: 0x08778a,
-      emissiveIntensity: 1.25,
-      roughness: 0.25,
-      metalness: 0.2
-    })
+    routeMaterial
   );
 
   scene.add(route);
@@ -519,14 +635,13 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
     );
 
     marker.position.copy(point);
+
     scene.add(marker);
   });
 
   // =========================================
-  // FLOATING PARTICLES — INSTANCED
+  // FLOATING PARTICLES
   // =========================================
-
-  const particleCount = 70;
 
   const particleGeometry = new THREE.SphereGeometry(
     0.025,
@@ -541,10 +656,10 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   const particles = new THREE.InstancedMesh(
     particleGeometry,
     particleMaterial,
-    particleCount
+    CONFIG.particleCount
   );
 
-  for (let i = 0; i < particleCount; i++) {
+  for (let i = 0; i < CONFIG.particleCount; i++) {
     dummy.position.set(
       (Math.random() - 0.5) * 14,
       Math.random() * 4.8,
@@ -552,44 +667,56 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
     );
 
     const scale = 0.5 + Math.random() * 1.2;
+
     dummy.scale.setScalar(scale);
 
     dummy.updateMatrix();
+
     particles.setMatrixAt(i, dummy.matrix);
   }
 
   particles.instanceMatrix.needsUpdate = true;
+
   scene.add(particles);
 
   // =========================================
   // ANIMATION
   // =========================================
 
-  const clock = new THREE.Clock();
+  function renderScene() {
+    if (disposed || contextLost) return;
 
-  function render() {
-    if (disposed) return;
-
-    const time = clock.getElapsedTime();
-
-    if (!CONFIG.reducedMotion) {
-      bottleGroup.rotation.y =
-        Math.sin(time * 0.42) * 0.1;
-
-      flakesGroup.rotation.y = time * 0.15;
-
-      spoolGroup.rotation.z =
-        Math.sin(time * 0.32) * 0.065;
-
-      particles.rotation.y = time * 0.015;
-    }
-
-    controls.update();
     renderer.render(scene, camera);
   }
 
+  function updateAnimation(time) {
+    if (CONFIG.reducedMotion) return;
+
+    bottleGroup.rotation.y =
+      Math.sin(time * 0.42) * 0.1;
+
+    flakesGroup.rotation.y = time * 0.15;
+
+    spoolGroup.rotation.z =
+      Math.sin(time * 0.32) * 0.065;
+
+    particles.rotation.y = time * 0.015;
+  }
+
+  function renderFrame() {
+    if (disposed || contextLost) return;
+
+    const time = clock.getElapsedTime();
+
+    updateAnimation(time);
+
+    controls.update();
+
+    renderScene();
+  }
+
   // =========================================
-  // VISIBILITY AND PERFORMANCE
+  // ANIMATION LOOP
   // =========================================
 
   function stopRendering() {
@@ -600,12 +727,18 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   }
 
   function animate() {
-    if (disposed || !isVisible || !isPageVisible) {
+    if (
+      disposed ||
+      contextLost ||
+      !isVisible ||
+      !isPageVisible ||
+      CONFIG.reducedMotion
+    ) {
       stopRendering();
       return;
     }
 
-    render();
+    renderFrame();
 
     animationFrame = requestAnimationFrame(animate);
   }
@@ -613,18 +746,67 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   function startRendering() {
     if (
       disposed ||
+      contextLost ||
       !isVisible ||
-      !isPageVisible ||
-      animationFrame !== null
+      !isPageVisible
     ) {
       return;
     }
 
-    render();
+    if (CONFIG.reducedMotion) {
+      renderScene();
+      return;
+    }
+
+    if (animationFrame !== null) return;
+
+    renderFrame();
+
     animationFrame = requestAnimationFrame(animate);
   }
 
-  // Pause when the page is hidden
+  // =========================================
+  // REDUCED MOTION
+  // =========================================
+
+  const motionQuery = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  );
+
+  function handleMotionChange(event) {
+    CONFIG.reducedMotion = event.matches;
+
+    controls.enableDamping = !CONFIG.reducedMotion;
+
+    stopRendering();
+
+    if (CONFIG.reducedMotion) {
+      renderScene();
+    } else {
+      startRendering();
+    }
+  }
+
+  if (motionQuery.addEventListener) {
+    motionQuery.addEventListener(
+      "change",
+      handleMotionChange
+    );
+  } else {
+    motionQuery.addListener(handleMotionChange);
+  }
+
+  // Render after user interaction in reduced-motion mode
+  controls.addEventListener("change", () => {
+    if (CONFIG.reducedMotion) {
+      renderScene();
+    }
+  });
+
+  // =========================================
+  // PAGE VISIBILITY
+  // =========================================
+
   function handleVisibilityChange() {
     isPageVisible = !document.hidden;
 
@@ -640,10 +822,17 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
     handleVisibilityChange
   );
 
-  // Pause when the 3D section is outside the viewport
+  // =========================================
+  // INTERSECTION OBSERVER
+  // =========================================
+
   const intersectionObserver = new IntersectionObserver(
     entries => {
-      isVisible = entries[0].isIntersecting;
+      const entry = entries[0];
+
+      if (!entry) return;
+
+      isVisible = entry.isIntersecting;
 
       if (isVisible) {
         startRendering();
@@ -651,7 +840,9 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
         stopRendering();
       }
     },
-    { threshold: 0.01 }
+    {
+      threshold: 0.01
+    }
   );
 
   intersectionObserver.observe(container);
@@ -661,7 +852,7 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   // =========================================
 
   function resizeScene() {
-    if (disposed) return;
+    if (disposed || contextLost) return;
 
     const width = container.clientWidth;
     const height = container.clientHeight;
@@ -669,43 +860,173 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
     if (!width || !height) return;
 
     camera.aspect = width / height;
+
     camera.updateProjectionMatrix();
 
-    renderer.setSize(width, height, false);
-
-    renderer.setPixelRatio(
-      Math.min(window.devicePixelRatio || 1, CONFIG.maxPixelRatio)
+    renderer.setSize(
+      width,
+      height,
+      false
     );
 
-    if (!isVisible || !isPageVisible) {
-      renderer.render(scene, camera);
+    const pixelRatio = Math.min(
+      window.devicePixelRatio || 1,
+      CONFIG.maxPixelRatio
+    );
+
+    if (pixelRatio !== lastPixelRatio) {
+      renderer.setPixelRatio(pixelRatio);
+      lastPixelRatio = pixelRatio;
+    }
+
+    if (!isVisible || !isPageVisible || CONFIG.reducedMotion) {
+      renderScene();
     }
   }
 
-  const resizeObserver = new ResizeObserver(resizeScene);
+  const resizeObserver = new ResizeObserver(() => {
+    resizeScene();
+  });
+
   resizeObserver.observe(container);
 
-  window.addEventListener("resize", resizeScene);
+  window.addEventListener(
+    "resize",
+    resizeScene,
+    { passive: true }
+  );
 
   // =========================================
-  // WEBGL CONTEXT
+  // WEBGL CONTEXT MANAGEMENT
   // =========================================
+
+  function handleContextLost(event) {
+    event.preventDefault();
+
+    contextLost = true;
+
+    stopRendering();
+
+    console.warn(
+      "EcoFilament: WebGL context lost."
+    );
+  }
+
+  function handleContextRestored() {
+    contextLost = false;
+
+    console.info(
+      "EcoFilament: WebGL context restored."
+    );
+
+    resizeScene();
+
+    startRendering();
+  }
 
   renderer.domElement.addEventListener(
     "webglcontextlost",
-    event => {
-      event.preventDefault();
-      stopRendering();
-    }
+    handleContextLost,
+    false
   );
 
   renderer.domElement.addEventListener(
     "webglcontextrestored",
-    () => {
-      if (!disposed) {
-        resizeScene();
-        startRendering();
+    handleContextRestored,
+    false
+  );
+
+  // =========================================
+  // CLEANUP
+  // =========================================
+
+  function cleanup() {
+    if (disposed) return;
+
+    disposed = true;
+
+    stopRendering();
+
+    intersectionObserver.disconnect();
+    resizeObserver.disconnect();
+
+    document.removeEventListener(
+      "visibilitychange",
+      handleVisibilityChange
+    );
+
+    window.removeEventListener(
+      "resize",
+      resizeScene
+    );
+
+    if (motionQuery.removeEventListener) {
+      motionQuery.removeEventListener(
+        "change",
+        handleMotionChange
+      );
+    } else {
+      motionQuery.removeListener(handleMotionChange);
+    }
+
+    renderer.domElement.removeEventListener(
+      "webglcontextlost",
+      handleContextLost
+    );
+
+    renderer.domElement.removeEventListener(
+      "webglcontextrestored",
+      handleContextRestored
+    );
+
+    controls.removeEventListener(
+      "change",
+      renderScene
+    );
+
+    controls.dispose();
+
+    // Dispose scene geometries and materials
+    scene.traverse(object => {
+      if (object.geometry) {
+        object.geometry.dispose();
       }
+
+      if (object.material) {
+        const materials = Array.isArray(object.material)
+          ? object.material
+          : [object.material];
+
+        materials.forEach(material => {
+          material.dispose();
+        });
+      }
+    });
+
+    renderer.dispose();
+
+    renderer.domElement.remove();
+
+    delete container.dataset.sceneInitialized;
+
+    console.info(
+      "EcoFilament: 3D scene cleaned up."
+    );
+  }
+
+  // Observe removal of the scene container
+  const removalObserver = new MutationObserver(() => {
+    if (!container.isConnected) {
+      removalObserver.disconnect();
+      cleanup();
+    }
+  });
+
+  removalObserver.observe(
+    document.documentElement,
+    {
+      childList: true,
+      subtree: true
     }
   );
 
@@ -714,8 +1035,11 @@ import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.180.0/exampl
   // =========================================
 
   resizeScene();
+
   startRendering();
 
-  console.info("EcoFilament 3D scene initialized.");
+  console.info(
+    "EcoFilament 3D scene initialized successfully."
+  );
 
 })();
