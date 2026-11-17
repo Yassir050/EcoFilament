@@ -14,3 +14,232 @@ h2{font-size:clamp(2rem,4vw,3.5rem);line-height:1.08;letter-spacing:-.04em;margi
 [dir="rtl"] .discussion-q{text-align:right}
 @media(max-width:760px){.hero{grid-template-columns:1fr;min-height:auto}.hero-art{height:260px;order:-1}.orb{width:150px;height:150px}.orbit{width:230px}.grid,.grid.three,.stage-list,.gallery,.challenge{grid-template-columns:1fr}.topbar{align-items:flex-start}.brand{padding-top:8px}.tools{justify-content:flex-end}.tools .tool{padding:7px 9px;font-size:.8rem}main{padding-top:24px}.controls{flex-wrap:wrap}.dots{order:3;width:100%}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
+/* =========================================
+   ECOFILAMENT — INTERACTIVE 3D SCENE
+========================================= */
+
+.scene3d-panel {
+    position: relative;
+    width: 100%;
+    margin: 35px auto;
+    padding: 22px;
+    overflow: hidden;
+
+    background: linear-gradient(
+        145deg,
+        rgba(15, 31, 49, 0.96),
+        rgba(8, 19, 33, 0.98)
+    );
+
+    border: 1px solid rgba(49, 210, 235, 0.22);
+    border-radius: 22px;
+
+    box-shadow:
+        0 0 35px rgba(0, 205, 255, 0.07),
+        inset 0 0 30px rgba(120, 90, 255, 0.035);
+}
+
+/* HEADER */
+
+.scene3d-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.scene3d-header h3 {
+    margin: 0;
+    color: var(--text, #eaf6ff);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.scene3d-header h3 span {
+    color: var(--cyan, #28d9ef);
+}
+
+.scene3d-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 7px 12px;
+    border: 1px solid rgba(72, 231, 193, 0.25);
+    border-radius: 30px;
+
+    color: #48e7c1;
+    background: rgba(72, 231, 193, 0.07);
+
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.scene3d-status::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #48e7c1;
+    box-shadow: 0 0 10px #48e7c1;
+}
+
+/* 3D CANVAS CONTAINER */
+
+#plastic-scene {
+    position: relative;
+    width: 100%;
+    height: 430px;
+    min-height: 300px;
+
+    overflow: hidden;
+    border-radius: 16px;
+
+    background:
+        radial-gradient(
+            ellipse at 50% 45%,
+            rgba(23, 70, 100, 0.28),
+            transparent 70%
+        ),
+        #081321;
+
+    border: 1px solid rgba(65, 190, 220, 0.13);
+}
+
+#plastic-scene canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    cursor: grab;
+}
+
+#plastic-scene canvas:active {
+    cursor: grabbing;
+}
+
+/* 3D LABELS */
+
+.scene3d-labels {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.scene3d-label {
+    position: absolute;
+    padding: 7px 11px;
+
+    border: 1px solid rgba(40, 217, 239, 0.28);
+    border-radius: 8px;
+
+    background: rgba(5, 17, 30, 0.78);
+    backdrop-filter: blur(8px);
+
+    color: #bcefff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+
+    box-shadow: 0 0 18px rgba(40, 217, 239, 0.08);
+}
+
+.bottle-label {
+    left: 5%;
+    top: 12%;
+}
+
+.flakes-label {
+    left: 40%;
+    top: 12%;
+}
+
+.spool-label {
+    right: 5%;
+    top: 12%;
+    border-color: rgba(139, 112, 255, 0.35);
+    color: #c7baff;
+}
+
+/* HINT */
+
+.scene3d-hint {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+
+    margin-top: 15px;
+
+    color: rgba(220, 240, 255, 0.65);
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.scene3d-hint span {
+    color: var(--cyan, #28d9ef);
+}
+
+/* HOVER EFFECT */
+
+.scene3d-panel:hover {
+    border-color: rgba(40, 217, 239, 0.4);
+
+    box-shadow:
+        0 0 40px rgba(0, 205, 255, 0.11),
+        inset 0 0 30px rgba(120, 90, 255, 0.05);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+    .scene3d-panel {
+        padding: 13px;
+        margin: 25px auto;
+        border-radius: 16px;
+    }
+
+    #plastic-scene {
+        height: 340px;
+        min-height: 280px;
+    }
+
+    .scene3d-label {
+        padding: 5px 7px;
+        font-size: 0.53rem;
+        letter-spacing: 0.4px;
+    }
+
+    .scene3d-header h3 {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 420px) {
+    #plastic-scene {
+        height: 290px;
+    }
+
+    .scene3d-label {
+        font-size: 0.46rem;
+    }
+
+    .spool-label {
+        right: 2%;
+    }
+}
+
+/* ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+    .scene3d-panel {
+        transition: none;
+    }
+}
