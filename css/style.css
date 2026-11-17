@@ -242,6 +242,12 @@ h2{font-size:clamp(2rem,4vw,3.5rem);line-height:1.08;letter-spacing:-.04em;margi
     .scene3d-panel {
         transition: none;
     }
+   #timerBtn,
+#timerBtn,
+button#timerBtn {
+    display: none !important;
+}
+   
 }
 #timerBtn {
     display: none !important;
