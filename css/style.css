@@ -247,7 +247,102 @@ h2{font-size:clamp(2rem,4vw,3.5rem);line-height:1.08;letter-spacing:-.04em;margi
 button#timerBtn {
     display: none !important;
 }
-   
+  
+/* =========================================
+   ECOFILAMENT — ENGLISH / ARABIC SUPPORT
+========================================= */
+
+/* English mode */
+.lang-en {
+    direction: ltr;
+}
+
+/* Arabic mode */
+.lang-ar {
+    direction: rtl;
+}
+
+.lang-ar,
+.lang-ar p,
+.lang-ar h1,
+.lang-ar h2,
+.lang-ar h3,
+.lang-ar h4,
+.lang-ar .sub,
+.lang-ar .lead,
+.lang-ar .footer-note {
+    text-align: right;
+}
+
+/* Arabic text */
+.ar {
+    direction: rtl;
+    text-align: right;
+    line-height: 1.9;
+}
+
+/* English text */
+.en {
+    direction: ltr;
+    text-align: left;
+}
+
+/* Hide the language that is not selected */
+.lang-en .ar {
+    display: none !important;
+}
+
+.lang-ar .en {
+    display: none !important;
+}
+
+/* Navigation and controls */
+.lang-ar .controls {
+    direction: rtl;
+}
+
+.lang-ar .dots {
+    direction: rtl;
+}
+
+.lang-ar .quiz-option {
+    text-align: right;
+    direction: rtl;
+}
+
+/* Process flow */
+.lang-ar .flow {
+    direction: rtl;
+}
+
+/* Cards and discussion */
+.lang-ar .card,
+.lang-ar .stage,
+.lang-ar .visual,
+.lang-ar .discussion-q {
+    text-align: right;
+}
+
+/* 3D scene controls */
+.lang-ar .scene3d-header {
+    direction: rtl;
+}
+
+.lang-ar .scene3d-hint {
+    direction: rtl;
+}
+
+/* Keep timer hidden */
+#timerBtn {
+    display: none !important;
+}
+
+/* Accessibility */
+button:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+}
+ 
 }
 #timerBtn {
     display: none !important;
