@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#07111d">
-<title>EcoTech | From Plastic Waste to 3D Printing Filament</title>
+<title>EcoFilament | From Plastic Waste to 3D Printing Filament</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="lang-both">
 <header class="topbar">
-  <div class="brand">ECO<span>TECH</span> / PRESENTATION</div>
+  <div class="brand">ECO<span>FILAMENT</span> / PRESENTATION</div>
   <div class="tools">
     <button class="tool" id="langBtn" type="button" title="Switch language" aria-label="Switch language">EN / AR</button>
     <button class="tool" id="timerBtn" type="button" aria-label="Start or pause presentation timer">⏱ <span class="timer" id="timer" role="timer" aria-label="10 minutes remaining">10:00</span></button>
@@ -76,7 +76,9 @@
     <span class="scene3d-status">● 3D READY</span>
   </div>
 
-  <div id="plastic-scene" aria-label="Interactive 3D plastic recycling scene"></div>
+  <div id="plastic-scene" aria-label="Interactive 3D plastic recycling scene">
+    <p class="scene3d-fallback">Loading interactive 3D scene…</p>
+  </div>
 
   <p class="scene3d-hint">
     Drag to rotate · Scroll to zoom
@@ -166,5 +168,6 @@
 </section>
 </main>
 <script src="js/script.js" defer></script>
+<script type="module" src="js/scene3d.js"></script>
 </body>
 </html>
