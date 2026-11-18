@@ -34,6 +34,82 @@
   let timerInterval = null;
 
   // =========================================
+  // PREMIUM MOTION + INTERACTION LAYER
+  // =========================================
+
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  );
+
+  // Self-contained styles: existing HTML/CSS selectors remain unchanged.
+  const motionStyles = document.createElement("style");
+  motionStyles.id = "ecofilament-motion-layer";
+  motionStyles.textContent = `
+    @keyframes efSlideEnter {
+      from { opacity: 0; transform: translate3d(0, 14px, 0) scale(.992); filter: blur(3px); }
+      to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
+    }
+    @keyframes efElementReveal {
+      from { opacity: 0; transform: translate3d(0, 12px, 0); }
+      to   { opacity: 1; transform: translate3d(0, 0, 0); }
+    }
+    .slide.ef-slide-enter {
+      animation: efSlideEnter 620ms cubic-bezier(.2,.75,.25,1) both;
+      will-change: opacity, transform, filter;
+    }
+    .slide .ef-reveal {
+      animation: efElementReveal 560ms cubic-bezier(.2,.75,.25,1) both;
+      animation-delay: var(--ef-reveal-delay, 0ms);
+    }
+    #progress { transition: width 520ms cubic-bezier(.2,.75,.25,1); }
+    .controls .navbtn, .controls .dot, button, .quiz-option {
+      transition: transform 220ms ease, box-shadow 220ms ease,
+        background-color 220ms ease, border-color 220ms ease, opacity 220ms ease;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      button:not(:disabled):hover, .quiz-option:not(:disabled):hover {
+        transform: translateY(-2px);
+      }
+      button:not(:disabled):active, .quiz-option:not(:disabled):active {
+        transform: translateY(0) scale(.985);
+      }
+    }
+    .ef-presentation-mode #presentation { width: 100%; max-width: none; }
+    .ef-presentation-mode .controls { transition: opacity 220ms ease; }
+    @media (prefers-reduced-motion: reduce) {
+      .slide.ef-slide-enter, .slide .ef-reveal { animation: none !important; }
+      #progress, .controls .navbtn, .controls .dot, button, .quiz-option {
+        transition: none !important;
+      }
+    }
+  `;
+  document.head.appendChild(motionStyles);
+
+  function animateSlideEntry(slide) {
+    if (!slide || reducedMotion.matches) return;
+
+    slide.classList.remove("ef-slide-enter");
+    const revealSelector =
+      "h1, h2, h3, p, .card, .glass-card, .stat, .feature, li, .quiz-option";
+
+    $$(revealSelector, slide).forEach((element, index) => {
+      element.classList.remove("ef-reveal");
+      element.style.setProperty(
+        "--ef-reveal-delay",
+        `${Math.min(index * 45, 360)}ms`
+      );
+    });
+
+    void slide.offsetWidth;
+    slide.classList.add("ef-slide-enter");
+
+    $$(revealSelector, slide).forEach(element => {
+      void element.offsetWidth;
+      element.classList.add("ef-reveal");
+    });
+  }
+
+  // =========================================
   // TRANSLATIONS
   // =========================================
 
@@ -276,6 +352,12 @@
   const quizPanel = $("#quizPanel");
   const resultPanel = $("#resultPanel");
 
+  if (feedback) {
+    feedback.setAttribute("role", "status");
+    feedback.setAttribute("aria-live", "polite");
+    feedback.setAttribute("aria-atomic", "true");
+  }
+
   // =========================================
   // TRANSLATION ENGINE
   // =========================================
@@ -417,32 +499,35 @@
   }
 
   function showSlide(index) {
-    currentSlide = Math.max(
+    const nextIndex = Math.max(
       0,
-      Math.min(slides.length - 1, index)
+      Math.min(slides.length - 1, Number(index) || 0)
     );
+
+    currentSlide = nextIndex;
 
     slides.forEach((slide, i) => {
       const active = i === currentSlide;
 
       slide.classList.toggle("active", active);
+      slide.setAttribute("aria-hidden", String(!active));
 
-      slide.setAttribute(
-        "aria-hidden",
-        String(!active)
-      );
-
-      // Prevent keyboard focus inside inactive slides
+      // Prevent keyboard focus inside inactive slides.
       slide.inert = !active;
+
+      if (active) {
+        animateSlideEntry(slide);
+      } else {
+        slide.classList.remove("ef-slide-enter");
+      }
     });
 
-    const percentage =
-      ((currentSlide + 1) / slides.length) * 100;
+    const percentage = ((currentSlide + 1) / slides.length) * 100;
 
     progress.style.width = `${percentage}%`;
+    progress.setAttribute("aria-valuenow", String(Math.round(percentage)));
 
     const progressBar = $("#presentationProgress");
-
     if (progressBar) {
       progressBar.setAttribute(
         "aria-valuenow",
@@ -451,16 +536,16 @@
     }
 
     prevButton.disabled = currentSlide === 0;
+    nextButton.disabled = currentSlide === slides.length - 1;
 
-    nextButton.disabled =
-      currentSlide === slides.length - 1;
-
-    slideCount.textContent =
-      `${currentSlide + 1} / ${slides.length}`;
+    slideCount.textContent = `${currentSlide + 1} / ${slides.length}`;
+    slideCount.setAttribute(
+      "aria-label",
+      `${t("section")} ${currentSlide + 1} ${t("of")} ${slides.length}`
+    );
 
     dotButtons.forEach((dot, i) => {
       const active = i === currentSlide;
-
       dot.classList.toggle("on", active);
 
       if (active) {
@@ -472,9 +557,7 @@
 
     window.scrollTo({
       top: 0,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "instant"
-        : "smooth"
+      behavior: reducedMotion.matches ? "auto" : "smooth"
     });
   }
 
@@ -590,16 +673,23 @@
   // =========================================
 
   function updateFullscreenLabel() {
+    const isFullscreen = Boolean(document.fullscreenElement);
+
+    document.documentElement.classList.toggle(
+      "ef-presentation-mode",
+      isFullscreen
+    );
+
     if (!fullscreenButton) return;
 
     fullscreenButton.textContent =
-      document.fullscreenElement
+      isFullscreen
         ? t("exitFullscreen")
         : t("fullscreen");
 
     fullscreenButton.setAttribute(
       "aria-label",
-      document.fullscreenElement
+      isFullscreen
         ? t("exitFullscreen")
         : t("fullscreen")
     );
@@ -626,46 +716,83 @@
   );
 
   // =========================================
-  // KEYBOARD NAVIGATION
+  // KEYBOARD SHORTCUTS
   // =========================================
+
+  function isTypingTarget(element) {
+    if (!element) return false;
+    const tag = element.tagName;
+
+    return (
+      tag === "INPUT" ||
+      tag === "TEXTAREA" ||
+      tag === "SELECT" ||
+      element.isContentEditable
+    );
+  }
 
   document.addEventListener("keydown", event => {
     if (
       event.altKey ||
       event.ctrlKey ||
       event.metaKey ||
-      event.shiftKey
+      event.shiftKey ||
+      isTypingTarget(document.activeElement)
     ) {
       return;
     }
 
     const activeElement = document.activeElement;
+    const focusedControl = activeElement &&
+      activeElement !== document.body &&
+      activeElement !== document.documentElement &&
+      /^(BUTTON|A|SUMMARY)$/.test(activeElement.tagName);
 
-    const tag = activeElement?.tagName;
-
-    if (
-      tag === "INPUT" ||
-      tag === "TEXTAREA" ||
-      tag === "SELECT" ||
-      activeElement?.isContentEditable
-    ) {
+    // Preserve native activation for focused controls and quiz answers.
+    if (focusedControl && (event.key === " " || event.key === "Enter")) {
       return;
     }
 
-    if (
-      event.key === "ArrowRight" ||
-      event.key === "ArrowLeft"
-    ) {
+    if (event.key.toLowerCase() === "f" && fullscreenButton) {
       event.preventDefault();
+      fullscreenButton.click();
+      return;
+    }
 
+    const handledKeys = [
+      "ArrowRight", "ArrowLeft", "PageDown", "PageUp",
+      " ", "Backspace", "Home", "End"
+    ];
+
+    if (handledKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+
+    if (event.key === "Home") {
+      showSlide(0);
+      return;
+    }
+
+    if (event.key === "End") {
+      showSlide(slides.length - 1);
+      return;
+    }
+
+    if (event.key === "PageDown" || event.key === " ") {
+      nextSlide();
+      return;
+    }
+
+    if (event.key === "PageUp" || event.key === "Backspace") {
+      previousSlide();
+      return;
+    }
+
+    if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
       if (currentLanguage === "ar") {
-        event.key === "ArrowRight"
-          ? previousSlide()
-          : nextSlide();
+        event.key === "ArrowRight" ? previousSlide() : nextSlide();
       } else {
-        event.key === "ArrowRight"
-          ? nextSlide()
-          : previousSlide();
+        event.key === "ArrowRight" ? nextSlide() : previousSlide();
       }
     }
   });
@@ -703,6 +830,7 @@
         `${String.fromCharCode(65 + index)}. ${answer}`;
 
       option.disabled = hasAnswered;
+      option.setAttribute("aria-pressed", "false");
 
       if (hasAnswered) {
         if (index === questions[questionIndex].correct) {
@@ -764,6 +892,10 @@
 
     optionButtons.forEach((button, index) => {
       button.disabled = true;
+      button.setAttribute(
+        "aria-pressed",
+        String(index === selectedIndex)
+      );
 
       if (index === correctIndex) {
         button.classList.add("correct");
@@ -885,6 +1017,10 @@
   // =========================================
   // INITIALIZATION
   // =========================================
+
+  progress.setAttribute("role", "progressbar");
+  progress.setAttribute("aria-valuemin", "0");
+  progress.setAttribute("aria-valuemax", "100");
 
   updateNavigationLanguage();
 
