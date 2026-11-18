@@ -2092,3 +2092,53 @@ body.lang-ar .quote, body.lang-ar .slide:nth-of-type(even) .quote {
 @media (prefers-reduced-motion: reduce) {
     .slide.active { animation: none !important; }
 }
+
+
+/* =========================================================
+   33. TYPOGRAPHY FIX — BILINGUAL TEXT INSIDE HEADINGS
+   Keep .en/.ar body-copy sizing from shrinking headings.
+========================================================= */
+
+.slide h1 .en,
+.slide h1 .ar,
+.slide h2 .en,
+.slide h2 .ar,
+.slide h3 .en,
+.slide h3 .ar,
+.slide .kicker .en,
+.slide .kicker .ar {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.slide h1 .ar,
+.slide h2 .ar,
+.slide h3 .ar {
+    font-family: "IBM Plex Sans Arabic", Tahoma, Arial, sans-serif;
+}
+
+/* Preserve clear title wrapping on narrow screens. */
+.slide h1,
+.slide h2,
+.slide h3 {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+    .slide h1 {
+        font-size: clamp(2rem, 9vw, 3.1rem);
+        line-height: 1.16;
+        letter-spacing: -0.035em;
+    }
+
+    .slide h2 {
+        font-size: clamp(1.65rem, 7vw, 2.45rem);
+        line-height: 1.2;
+    }
+
+    .slide h3 {
+        font-size: 1.12rem;
+        line-height: 1.4;
+    }
+}
