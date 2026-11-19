@@ -1062,6 +1062,10 @@ function startQuiz(mode = "full") {
 
   renderQuizStage();
 }
+
+  // Start button: the welcome screen is built dynamically, so bind it here.
+  $("#quizStartButton").addEventListener("click", () => startQuiz("full"));
+
   // =========================================
   // QUIZ — PROGRESS + QUESTION RENDERING
   // =========================================
