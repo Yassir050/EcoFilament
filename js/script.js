@@ -1,4 +1,3 @@
-
 (() => {
   "use strict";
 
@@ -332,7 +331,7 @@
   ];
 
   // =========================================
-  // QUIZ STATE
+  // QUIZ STATE + DYNAMIC QUIZ SCREENS
   // =========================================
 
   let questionIndex = 0;
@@ -341,22 +340,219 @@
   let selectedAnswer = null;
   let quizFinished = false;
 
+  let quizStage = "welcome";
+  let quizMode = "full";
+  let activeQuestionIndices = questions.map((_, index) => index);
+  let runAnswers = [];
+  let fullAttemptAnswers = questions.map(() => null);
+
   const questionCount = $("#qCount");
   const questionText = $("#question");
   const optionsContainer = $("#options");
   const feedback = $("#feedback");
   const scoreDisplay = $("#score");
   const quizProgress = $("#quizProgress");
+  const quizProgressWrap = $("#quizProgressWrap");
 
   const nextQuestionButton = $("#nextQuestion");
   const quizPanel = $("#quizPanel");
   const resultPanel = $("#resultPanel");
+
+  const quizWelcomePanel = document.createElement("section");
+  quizWelcomePanel.className = "panel quiz-screen quiz-welcome";
+  quizWelcomePanel.id = "quizWelcomePanel";
+  quizWelcomePanel.setAttribute("aria-labelledby", "quizWelcomeTitle");
+  quizWelcomePanel.innerHTML = `
+    <div class="quiz-welcome-orb" aria-hidden="true"><span>EF</span></div>
+    <div class="quiz-welcome-copy">
+      <span class="quiz-eyebrow" id="quizWelcomeEyebrow"></span>
+      <h3 id="quizWelcomeTitle"></h3>
+      <p id="quizWelcomeDescription"></p>
+      <div class="quiz-info-grid">
+        <div class="quiz-info-card"><span class="quiz-info-icon" aria-hidden="true">✦</span><b id="quizInfoQuestions"></b><small id="quizInfoQuestionsLabel"></small></div>
+        <div class="quiz-info-card"><span class="quiz-info-icon" aria-hidden="true">◷</span><b id="quizInfoTime"></b><small id="quizInfoTimeLabel"></small></div>
+        <div class="quiz-info-card"><span class="quiz-info-icon" aria-hidden="true">◎</span><b id="quizInfoMode"></b><small id="quizInfoModeLabel"></small></div>
+      </div>
+      <p class="quiz-instructions" id="quizInstructions"></p>
+      <button class="action primary quiz-start-button" id="quizStartButton" type="button"></button>
+    </div>
+  `;
+  quizPanel.parentNode.insertBefore(quizWelcomePanel, quizPanel);
+
+  const quizReviewPanel = document.createElement("section");
+  quizReviewPanel.className = "panel quiz-screen quiz-review";
+  quizReviewPanel.id = "quizReviewPanel";
+  quizReviewPanel.hidden = true;
+  quizReviewPanel.innerHTML = `
+    <div class="quiz-review-header">
+      <div><span class="quiz-eyebrow" id="quizReviewEyebrow"></span><h3 id="quizReviewTitle"></h3><p id="quizReviewDescription"></p></div>
+      <button class="action quiz-review-back" id="quizReviewBack" type="button"></button>
+    </div>
+    <div class="quiz-review-list" id="quizReviewContent"></div>
+  `;
+  resultPanel.parentNode.insertBefore(quizReviewPanel, resultPanel.nextSibling);
+
+  const quizResultDashboard = document.createElement("div");
+  quizResultDashboard.className = "quiz-result-dashboard";
+  quizResultDashboard.id = "quizResultDashboard";
+  quizResultDashboard.innerHTML = `
+    <div class="quiz-result-ring" id="quizResultRing"><div class="quiz-result-ring-inner"><strong id="quizPercent">0%</strong><span id="quizPercentLabel"></span></div></div>
+    <div class="quiz-result-stats">
+      <div class="quiz-stat-card"><strong id="quizCorrectCount">0</strong><span id="quizCorrectLabel"></span></div>
+      <div class="quiz-stat-card"><strong id="quizWrongCount">0</strong><span id="quizWrongLabel"></span></div>
+      <div class="quiz-stat-card"><strong id="quizTotalCount">0</strong><span id="quizTotalLabel"></span></div>
+    </div>
+    <div class="quiz-achievement" id="quizAchievement"><span class="quiz-achievement-icon" id="quizAchievementIcon">✦</span><div><small id="quizAchievementCaption"></small><strong id="quizAchievementName"></strong><p id="quizAchievementDescription"></p></div></div>
+    <div class="quiz-result-actions">
+      <button class="action" id="quizReviewButton" type="button"></button>
+      <button class="action primary" id="quizRetryMistakesButton" type="button"></button>
+    </div>
+  `;
+  const resultMessageAnchor = $("#resultMessage", resultPanel);
+  resultMessageAnchor.insertAdjacentElement("afterend", quizResultDashboard);
+
+  const quizCopy = {
+    en: {
+      welcomeEyebrow: "ECOFILAMENT KNOWLEDGE CHECK",
+      welcomeTitle: "Ready to test what you learned?",
+      welcomeDescription: "A short interactive challenge about plastic reuse, filament quality, and the circular economy.",
+      questions: "5 questions", questionsLabel: "Quick knowledge check",
+      time: "2–3 min", timeLabel: "Estimated duration",
+      mode: "Multiple choice", modeLabel: "One answer per question",
+      instructions: "Choose one answer for each question. You will see an explanation after every choice, and you can review your answers at the end.",
+      start: "Start quiz →", startAgain: "Start a new attempt →",
+      progress: (done, total) => `${done} of ${total} completed`,
+      reviewEyebrow: "LEARNING REVIEW", reviewTitle: "Review your answers",
+      reviewDescription: "Compare your choice with the correct answer and read the explanation.",
+      backResults: "← Back to results", yourAnswer: "Your answer",
+      correctAnswer: "Correct answer", explanation: "Why this is correct",
+      notAnswered: "Not answered", correct: "Correct", incorrect: "Incorrect",
+      percent: "Your score", correctLabel: "Correct", wrongLabel: "Incorrect", totalLabel: "Questions",
+      badgeCaption: "YOUR ACHIEVEMENT", badgeBeginner: "Eco Beginner", badgeLearner: "Eco Learner", badgeExpert: "Eco Expert", badgePerfect: "Perfect Score",
+      badgeBeginnerDesc: "A starting point for your eco-learning journey.", badgeLearnerDesc: "You are building a solid understanding.", badgeExpertDesc: "Strong understanding of the key ideas.", badgePerfectDesc: "A flawless result. Excellent work!",
+      reviewButton: "Review answers", retryButton: "Retry mistakes ↻", noMistakes: "No mistakes to retry — excellent work!",
+      retryIntro: "This round includes only the questions you missed in your last attempt.",
+      retryResult: "Mistake review complete", retryAgain: "Try the full quiz again →",
+      resultFull: (s, total) => `You answered ${s} out of ${total} questions correctly. Use the review below to strengthen what you learned.`,
+      resultRetry: (s, total) => `You corrected ${s} out of ${total} questions in your mistake review.`,
+      question: "Question", of: "of", next: "Next question →", finish: "View results →",
+      correctFeedback: "✓ Correct!", wrongFeedback: "Not quite.",
+      retryUnavailable: "Complete the full quiz first to unlock mistake review."
+    },
+    ar: {
+      welcomeEyebrow: "اختبار معلومات ECOFILAMENT",
+      welcomeTitle: "هل أنت مستعد لاختبار ما تعلمته؟",
+      welcomeDescription: "تحدٍّ تفاعلي قصير حول إعادة استخدام البلاستيك وجودة الخيوط والاقتصاد الدائري.",
+      questions: "5 أسئلة", questionsLabel: "اختبار سريع للمعلومات",
+      time: "2–3 دقائق", timeLabel: "المدة التقديرية",
+      mode: "اختيار متعدد", modeLabel: "إجابة واحدة لكل سؤال",
+      instructions: "اختر إجابة واحدة لكل سؤال. ستظهر لك ملاحظة تفسيرية بعد كل اختيار، ويمكنك مراجعة إجاباتك في النهاية.",
+      start: "ابدأ الاختبار ←", startAgain: "ابدأ محاولة جديدة ←",
+      progress: (done, total) => `أكملت ${done} من أصل ${total}`,
+      reviewEyebrow: "مراجعة التعلم", reviewTitle: "راجع إجاباتك",
+      reviewDescription: "قارن اختيارك بالإجابة الصحيحة واقرأ التفسير العلمي.",
+      backResults: "العودة إلى النتائج ←", yourAnswer: "إجابتك",
+      correctAnswer: "الإجابة الصحيحة", explanation: "لماذا هذه هي الإجابة الصحيحة؟",
+      notAnswered: "لم تتم الإجابة", correct: "صحيحة", incorrect: "خاطئة",
+      percent: "نتيجتك", correctLabel: "إجابات صحيحة", wrongLabel: "إجابات خاطئة", totalLabel: "عدد الأسئلة",
+      badgeCaption: "إنجازك", badgeBeginner: "مبتدئ بيئي", badgeLearner: "متعلم بيئي", badgeExpert: "خبير بيئي", badgePerfect: "نتيجة مثالية",
+      badgeBeginnerDesc: "هذه بداية رحلتك في التعلم البيئي.", badgeLearnerDesc: "أنت تبني فهماً جيداً للمفاهيم.", badgeExpertDesc: "فهم قوي للأفكار الأساسية.", badgePerfectDesc: "نتيجة كاملة، عمل ممتاز!",
+      reviewButton: "مراجعة الإجابات", retryButton: "أعد الأسئلة الخاطئة ↻", noMistakes: "لا توجد أخطاء لإعادتها — عمل ممتاز!",
+      retryIntro: "ستتضمن هذه الجولة الأسئلة التي أخطأت فيها في المحاولة السابقة فقط.",
+      retryResult: "اكتملت مراجعة الأخطاء", retryAgain: "أعد الاختبار كاملاً ←",
+      resultFull: (s, total) => `أجبت إجابة صحيحة عن ${s} من أصل ${total} أسئلة. استخدم المراجعة أدناه لترسيخ ما تعلمته.`,
+      resultRetry: (s, total) => `صححت ${s} من أصل ${total} أسئلة في جولة مراجعة الأخطاء.`,
+      question: "السؤال", of: "من", next: "السؤال التالي ←", finish: "عرض النتائج ←",
+      correctFeedback: "✓ إجابة صحيحة!", wrongFeedback: "ليست الإجابة الصحيحة.",
+      retryUnavailable: "أكمل الاختبار كاملاً أولاً لفتح مراجعة الأخطاء."
+    }
+  };
+
+  const qc = key => quizCopy[currentLanguage][key];
 
   if (feedback) {
     feedback.setAttribute("role", "status");
     feedback.setAttribute("aria-live", "polite");
     feedback.setAttribute("aria-atomic", "true");
   }
+
+  // Premium quiz styling is scoped to the quiz only; the rest of the deck is untouched.
+  const quizStyles = document.createElement("style");
+  quizStyles.id = "ecofilament-quiz-premium-styles";
+  quizStyles.textContent = `
+    .quiz-screen[hidden], #quizPanel[hidden], #resultPanel[hidden] { display:none !important; }
+    .quiz-screen, #quizPanel, #resultPanel { position:relative; overflow:hidden; border:1px solid rgba(182,243,107,.17); background:linear-gradient(145deg,rgba(36,58,47,.94),rgba(16,26,23,.97)); box-shadow:0 22px 60px rgba(0,0,0,.22),inset 0 1px 0 rgba(241,245,242,.04); }
+    .quiz-welcome { display:grid; grid-template-columns:minmax(120px,.55fr) minmax(0,1.8fr); gap:clamp(18px,4vw,42px); align-items:center; padding:clamp(22px,4vw,42px); }
+    .quiz-welcome-orb { width:min(100%,190px); aspect-ratio:1; display:grid; place-items:center; justify-self:center; border-radius:38%; color:#102018; font-size:2.4rem; font-weight:950; letter-spacing:-.08em; background:radial-gradient(circle at 30% 25%,#d5ff9c 0,#78e5a0 30%,#239b68 72%,#1d3028 100%); box-shadow:0 0 0 12px rgba(57,217,138,.055),0 0 70px rgba(57,217,138,.2); transform:rotate(-12deg); animation:efQuizFloat 5s ease-in-out infinite; }
+    .quiz-welcome-orb span { transform:rotate(12deg); }
+    @keyframes efQuizFloat { 50% { transform:translateY(-9px) rotate(-7deg); } }
+    .quiz-eyebrow { display:inline-block; margin-bottom:10px; color:#B6F36B; font-size:.72rem; font-weight:900; letter-spacing:.14em; }
+    .quiz-welcome h3,.quiz-review h3 { margin:0 0 10px; color:#F1F5F2; font-size:clamp(1.45rem,3vw,2.15rem); line-height:1.25; }
+    .quiz-welcome-copy>p,.quiz-review-header p { max-width:720px; margin:0; color:#B4C7BC; line-height:1.8; }
+    .quiz-info-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:23px 0 15px; }
+    .quiz-info-card { min-width:0; padding:13px; border:1px solid rgba(182,243,107,.14); border-radius:15px; background:rgba(16,26,23,.56); }
+    .quiz-info-icon { display:block; margin-bottom:5px; color:#B6F36B; font-size:1.1rem; }
+    .quiz-info-card b,.quiz-info-card small { display:block; overflow-wrap:anywhere; }
+    .quiz-info-card b { color:#F1F5F2; font-size:.92rem; }
+    .quiz-info-card small { margin-top:3px; color:#9FB5A8; font-size:.72rem; line-height:1.5; }
+    .quiz-instructions { margin:13px 0 18px !important; padding-inline-start:13px; border-inline-start:3px solid #39D98A; font-size:.9rem; }
+    .quiz-start-button { min-width:190px; }
+    #quizPanel { padding:clamp(18px,3vw,30px); }
+    .quiz-meta { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; color:#DCE9E0; }
+    #quizProgressWrap { height:8px; margin-bottom:12px; background:rgba(182,243,107,.12); border-radius:30px; overflow:hidden; }
+    #quizProgress { background:linear-gradient(90deg,#39D98A,#B6F36B); border-radius:30px; transition:width 500ms cubic-bezier(.2,.75,.25,1); }
+    .quiz-live-status { margin:0 0 18px; color:#9FB5A8; font-size:.78rem; }
+    .quiz-question { color:#F1F5F2; font-size:clamp(1.12rem,2.5vw,1.45rem); line-height:1.5; margin:0 0 16px; }
+    .quiz-option { display:flex; align-items:center; gap:12px; min-height:54px; padding:13px 16px; border:1px solid rgba(182,243,107,.15); border-radius:14px; background:rgba(16,26,23,.62); color:#F1F5F2; text-align:start; line-height:1.65; }
+    .quiz-option::before { content:attr(data-option-letter); flex:0 0 28px; width:28px; height:28px; display:grid; place-items:center; border-radius:9px; color:#B6F36B; background:rgba(57,217,138,.1); font-size:.78rem; font-weight:900; }
+    .quiz-option:hover:not(:disabled) { border-color:#39D98A; background:rgba(57,217,138,.1); transform:translateY(-2px); }
+    .quiz-option.correct { color:#E3FFED; border-color:#39D98A; background:rgba(23,75,53,.82); }
+    .quiz-option.wrong { color:#FFE3E3; border-color:#FF8B8B; background:rgba(81,43,50,.82); }
+    .quiz-option:disabled { opacity:1; cursor:default; }
+    .feedback { min-height:38px; margin:12px 0; color:#B6F36B; font-size:.9rem; line-height:1.8; }
+    .quiz-next { margin-top:5px; }
+    .quiz-results { padding:clamp(22px,4vw,38px); }
+    .quiz-result-dashboard { display:grid; grid-template-columns:minmax(130px,.7fr) minmax(0,1.3fr); gap:18px 28px; align-items:center; margin:22px 0; }
+    .quiz-result-ring { --quiz-score:0%; width:min(100%,170px); aspect-ratio:1; display:grid; place-items:center; justify-self:center; border-radius:50%; background:conic-gradient(#39D98A var(--quiz-score),rgba(182,243,107,.12) 0); position:relative; transition:background 700ms ease; }
+    .quiz-result-ring::before { content:""; position:absolute; inset:10px; border-radius:50%; background:#172720; border:1px solid rgba(182,243,107,.13); }
+    .quiz-result-ring-inner { position:relative; z-index:1; display:grid; text-align:center; }
+    .quiz-result-ring-inner strong { color:#B6F36B; font-size:2rem; line-height:1.1; }
+        .quiz-result-ring-inner span { color:#9FB5A8; font-size:.72rem; margin-top:5px; }
+    .quiz-result-stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; }
+    .quiz-stat-card { padding:13px 9px; border:1px solid rgba(182,243,107,.13); border-radius:14px; background:rgba(16,26,23,.5); text-align:center; }
+    .quiz-stat-card strong,.quiz-stat-card span { display:block; }
+    .quiz-stat-card strong { color:#F1F5F2; font-size:1.35rem; }
+    .quiz-stat-card span { color:#9FB5A8; font-size:.7rem; line-height:1.5; }
+    .quiz-achievement { grid-column:1/-1; display:flex; align-items:center; gap:14px; padding:15px; border:1px solid rgba(182,243,107,.2); border-radius:16px; background:linear-gradient(110deg,rgba(57,217,138,.1),rgba(182,243,107,.045)); }
+    .quiz-achievement-icon { width:46px; height:46px; flex:0 0 46px; display:grid; place-items:center; border-radius:14px; color:#102018; background:linear-gradient(135deg,#39D98A,#B6F36B); font-size:1.35rem; }
+    .quiz-achievement small,.quiz-achievement strong { display:block; }
+    .quiz-achievement small { color:#9FB5A8; font-size:.68rem; text-transform:uppercase; letter-spacing:.1em; }
+    .quiz-achievement strong { color:#F1F5F2; margin-top:2px; }
+    .quiz-achievement p { color:#B4C7BC; margin:3px 0 0; font-size:.82rem; }
+    .quiz-result-actions { grid-column:1/-1; display:flex; flex-wrap:wrap; gap:10px; }
+    .quiz-result-actions .action { flex:1 1 180px; }
+    .quiz-perfect .quiz-achievement { box-shadow:0 0 30px rgba(182,243,107,.12); animation:efQuizGlow 2.4s ease-in-out infinite; }
+    @keyframes efQuizGlow { 50% { box-shadow:0 0 34px rgba(182,243,107,.24); } }
+    .quiz-review { padding:clamp(18px,3vw,30px); }
+    .quiz-review-header { display:flex; justify-content:space-between; align-items:flex-start; gap:18px; margin-bottom:20px; }
+    .quiz-review-back { flex:0 0 auto; }
+    .quiz-review-item { margin:12px 0; padding:17px; border:1px solid rgba(182,243,107,.14); border-radius:15px; background:rgba(16,26,23,.55); }
+    .quiz-review-item h4 { color:#F1F5F2; margin:0 0 12px; font-size:1rem; line-height:1.6; }
+    .quiz-review-answer { margin:7px 0; color:#B4C7BC; font-size:.88rem; line-height:1.7; }
+    .quiz-review-answer b { color:#F1F5F2; }
+    .quiz-review-answer.is-correct b { color:#8EE6AC; }
+    .quiz-review-answer.is-wrong b { color:#FFAAAA; }
+    .quiz-review-explanation { margin:12px 0 0; padding:11px 13px; border-inline-start:3px solid #39D98A; border-radius:8px; color:#B6F36B; background:rgba(57,217,138,.07); font-size:.86rem; line-height:1.8; }
+    .quiz-review-status { display:inline-block; margin-bottom:8px; padding:4px 9px; border-radius:20px; color:#B6F36B; background:rgba(57,217,138,.1); font-size:.7rem; font-weight:800; }
+    .quiz-review-status.wrong { color:#FFB6B6; background:rgba(255,139,139,.1); }
+    .quiz-empty-review { padding:22px; text-align:center; color:#B4C7BC; }
+    body.lang-ar .quiz-welcome, body.lang-ar .quiz-review { direction:rtl; }
+    body.lang-ar .quiz-option { direction:rtl; text-align:right; }
+    @media(max-width:680px) { .quiz-welcome { grid-template-columns:1fr; } .quiz-welcome-orb { width:112px; } .quiz-result-dashboard { grid-template-columns:1fr; } .quiz-result-stats { width:100%; } .quiz-review-header { flex-direction:column; } .quiz-review-back { align-self:flex-start; } }
+    @media(max-width:420px) { .quiz-info-grid { grid-template-columns:1fr; } .quiz-info-card { display:grid; grid-template-columns:25px 1fr; column-gap:8px; align-items:center; } .quiz-info-icon { grid-row:span 2; margin:0; } .quiz-stat-card { padding:10px 5px; } .quiz-stat-card span { font-size:.62rem; } }
+    @media(prefers-reduced-motion:reduce) { .quiz-welcome-orb,.quiz-perfect .quiz-achievement { animation:none !important; } #quizProgress,.quiz-result-ring { transition:none !important; } }
+  `;
+  document.head.appendChild(quizStyles);
 
   // =========================================
   // TRANSLATION ENGINE
@@ -415,12 +611,8 @@
     renderTimer();
     updateFullscreenLabel();
 
-    // Preserve quiz state when changing language
-    if (quizFinished) {
-      updateResult();
-    } else {
-      loadQuestion();
-    }
+    // Preserve the current quiz stage and answers when changing language.
+    renderQuizStage();
   }
 
   langButton.addEventListener("click", () => {
@@ -714,8 +906,7 @@
     "fullscreenchange",
     updateFullscreenLabel
   );
-
-  // =========================================
+    // =========================================
   // KEYBOARD SHORTCUTS
   // =========================================
 
@@ -798,79 +989,153 @@
   });
 
   // =========================================
-  // QUIZ — RENDER QUESTION
+  // QUIZ — SCREEN MANAGEMENT
   // =========================================
 
+  function setQuizScreen(stage) {
+    quizStage = stage;
+    quizWelcomePanel.hidden = stage !== "welcome";
+    quizPanel.hidden = stage !== "active";
+    resultPanel.hidden = stage !== "result";
+    quizReviewPanel.hidden = stage !== "review";
+  }
+
+  function renderWelcome() {
+    $("#quizWelcomeEyebrow").textContent = qc("welcomeEyebrow");
+    $("#quizWelcomeTitle").textContent = qc("welcomeTitle");
+    $("#quizWelcomeDescription").textContent = qc("welcomeDescription");
+    $("#quizInfoQuestions").textContent = qc("questions");
+    $("#quizInfoQuestionsLabel").textContent = qc("questionsLabel");
+    $("#quizInfoTime").textContent = qc("time");
+    $("#quizInfoTimeLabel").textContent = qc("timeLabel");
+    $("#quizInfoMode").textContent = qc("mode");
+    $("#quizInfoModeLabel").textContent = qc("modeLabel");
+    $("#quizInstructions").textContent = qc("instructions");
+    $("#quizStartButton").textContent = qc("start");
+  }
+
+  function renderQuizStage() {
+    if (quizStage === "welcome") {
+      setQuizScreen("welcome");
+      renderWelcome();
+    } else if (quizStage === "active") {
+      setQuizScreen("active");
+      loadQuestion();
+    } else if (quizStage === "result") {
+      setQuizScreen("result");
+      updateResult();
+    } else if (quizStage === "review") {
+      setQuizScreen("review");
+      renderReview();
+    }
+  }
+
+  function startQuiz(mode = "full") {
+    quizMode = mode;
+
+    if (mode === "mistakes") {
+      activeQuestionIndices = fullAttemptAnswers
+        .map((answer, index) => answer && !answer.isCorrect ? index : -1)
+        .filter(index => index !== -1);
+
+      if (!activeQuestionIndices.length) {
+        updateResult();
+        return;
+      }
+    } else {
+      activeQuestionIndices = questions.map((_, index) => index);
+      fullAttemptAnswers = questions.map(() => null);
+    }
+
+    runAnswers = activeQuestionIndices.map(() => null);
+    questionIndex = 0;
+    score = 0;
+    hasAnswered = false;
+    selectedAnswer = null;
+    quizFinished = false;
+
+    renderQuizStage();
+  }
+
+  $("#quizStartButton").addEventListener("click", () => startQuiz("full"));
+
+  // =========================================
+  // QUIZ — PROGRESS + QUESTION RENDERING
+  // =========================================
+
+  function updateQuizProgress() {
+    const total = activeQuestionIndices.length;
+    const completed = questionIndex + (hasAnswered ? 1 : 0);
+    const percentage = total ? Math.round((completed / total) * 100) : 0;
+
+    if (quizProgress) quizProgress.style.width = `${percentage}%`;
+    if (quizProgressWrap) {
+      quizProgressWrap.setAttribute("aria-valuenow", String(percentage));
+      quizProgressWrap.setAttribute("aria-valuetext", qc("progress")(completed, total));
+      quizProgressWrap.setAttribute("aria-label", currentLanguage === "ar" ? "تقدم الاختبار" : "Quiz progress");
+    }
+
+    let status = $("#quizLiveStatus");
+    if (!status && quizProgressWrap) {
+      status = document.createElement("p");
+      status.className = "quiz-live-status";
+      status.id = "quizLiveStatus";
+      quizProgressWrap.insertAdjacentElement("afterend", status);
+    }
+    if (status) status.textContent = qc("progress")(completed, total);
+  }
+
   function getCurrentQuestion() {
-    return questions[questionIndex][currentLanguage];
+    const sourceIndex = activeQuestionIndices[questionIndex];
+    return questions[sourceIndex][currentLanguage];
   }
 
   function loadQuestion() {
-    if (!questionText || !optionsContainer) return;
+    if (!questionText || !optionsContainer || !activeQuestionIndices.length) return;
 
+    const sourceIndex = activeQuestionIndices[questionIndex];
     const question = getCurrentQuestion();
+    const savedAnswer = runAnswers[questionIndex];
 
-    questionCount.textContent =
-      `${t("question")} ${questionIndex + 1} ${t("of")} ${questions.length}`;
+    hasAnswered = Boolean(savedAnswer);
+    selectedAnswer = savedAnswer ? savedAnswer.selectedIndex : null;
 
+    questionCount.textContent = `${qc("question")} ${questionIndex + 1} ${qc("of")} ${activeQuestionIndices.length}`;
     questionText.textContent = question.question;
+    scoreDisplay.textContent = String(score);
 
-    quizProgress.style.width =
-      `${(questionIndex / questions.length) * 100}%`;
-
+    updateQuizProgress();
     optionsContainer.replaceChildren();
 
     question.answers.forEach((answer, index) => {
       const option = document.createElement("button");
-
       option.className = "quiz-option";
       option.type = "button";
-
-      option.textContent =
-        `${String.fromCharCode(65 + index)}. ${answer}`;
-
+      option.dataset.optionLetter = String.fromCharCode(65 + index);
+      option.textContent = answer;
       option.disabled = hasAnswered;
-      option.setAttribute("aria-pressed", "false");
+      option.setAttribute("aria-pressed", String(selectedAnswer === index));
 
-      if (hasAnswered) {
-        if (index === questions[questionIndex].correct) {
-          option.classList.add("correct");
-        }
-
-        if (
-          index === selectedAnswer &&
-          selectedAnswer !== questions[questionIndex].correct
-        ) {
-          option.classList.add("wrong");
-        }
+      if (hasAnswered && index === questions[sourceIndex].correct) {
+        option.classList.add("correct");
+      }
+      if (hasAnswered && index === selectedAnswer && selectedAnswer !== questions[sourceIndex].correct) {
+        option.classList.add("wrong");
       }
 
-      option.addEventListener("click", () => {
-        chooseAnswer(index, option);
-      });
-
+      option.addEventListener("click", () => chooseAnswer(index, option));
       optionsContainer.appendChild(option);
     });
 
-    // Restore previous answer feedback after language change
-    if (hasAnswered) {
-      const isCorrect =
-        selectedAnswer === questions[questionIndex].correct;
-
-      feedback.textContent =
-        `${isCorrect ? t("correct") : t("incorrect")} ${question.explanation}`;
+    if (hasAnswered && savedAnswer) {
+      const isCorrect = savedAnswer.isCorrect;
+      feedback.textContent = `${isCorrect ? qc("correctFeedback") : qc("wrongFeedback")} ${question.explanation}`;
     } else {
       feedback.textContent = "";
     }
 
     nextQuestionButton.disabled = !hasAnswered;
-
-    nextQuestionButton.textContent =
-      questionIndex === questions.length - 1
-        ? t("seeResult")
-        : t("nextQuestion");
-
-    scoreDisplay.textContent = score;
+    nextQuestionButton.textContent = questionIndex === activeQuestionIndices.length - 1 ? qc("finish") : qc("next");
   }
 
   // =========================================
@@ -878,110 +1143,197 @@
   // =========================================
 
   function chooseAnswer(selectedIndex, selectedButton) {
-    if (hasAnswered || quizFinished) return;
+    if (hasAnswered || quizFinished || quizStage !== "active") return;
+
+    const sourceIndex = activeQuestionIndices[questionIndex];
+    const correctIndex = questions[sourceIndex].correct;
+    const isCorrect = selectedIndex === correctIndex;
 
     hasAnswered = true;
     selectedAnswer = selectedIndex;
 
-    const question = getCurrentQuestion();
+    runAnswers[questionIndex] = {
+      sourceIndex,
+      selectedIndex,
+      correctIndex,
+      isCorrect
+    };
 
-    const correctIndex = questions[questionIndex].correct;
-
-    const optionButtons =
-      $$("button", optionsContainer);
-
-    optionButtons.forEach((button, index) => {
-      button.disabled = true;
-      button.setAttribute(
-        "aria-pressed",
-        String(index === selectedIndex)
-      );
-
-      if (index === correctIndex) {
-        button.classList.add("correct");
-      }
-    });
-
-    if (selectedIndex === correctIndex) {
-      score += 1;
-
-      feedback.textContent =
-        `${t("correct")} ${question.explanation}`;
-    } else {
-      selectedButton.classList.add("wrong");
-
-      feedback.textContent =
-        `${t("incorrect")} ${question.explanation}`;
+    if (quizMode === "full") {
+      fullAttemptAnswers[sourceIndex] = runAnswers[questionIndex];
     }
 
-    scoreDisplay.textContent = score;
+    if (isCorrect) score += 1;
 
+    $$("button", optionsContainer).forEach((button, index) => {
+      button.disabled = true;
+      button.setAttribute("aria-pressed", String(index === selectedIndex));
+      if (index === correctIndex) button.classList.add("correct");
+    });
+
+    if (!isCorrect && selectedButton) selectedButton.classList.add("wrong");
+
+    const localizedQuestion = questions[sourceIndex][currentLanguage];
+    feedback.textContent = `${isCorrect ? qc("correctFeedback") : qc("wrongFeedback")} ${localizedQuestion.explanation}`;
+    scoreDisplay.textContent = String(score);
     nextQuestionButton.disabled = false;
+    updateQuizProgress();
   }
 
   // =========================================
-  // QUIZ — RESULTS
+  // QUIZ — RESULTS DASHBOARD + ACHIEVEMENTS
   // =========================================
 
   function updateResult() {
     const finalScore = $("#finalScore");
     const resultText = $("#resultText");
     const resultMessage = $("#resultMessage");
+    if (!finalScore || !resultText || !resultMessage) return;
 
-    if (!finalScore || !resultText || !resultMessage) {
-      return;
+    const total = activeQuestionIndices.length || questions.length;
+    const correctCount = score;
+    const wrongCount = Math.max(0, total - correctCount);
+    const percentage = total ? Math.round((correctCount / total) * 100) : 0;
+
+    finalScore.textContent = `${correctCount}/${total}`;
+    resultText.textContent = quizMode === "mistakes"
+      ? qc("retryResult")
+      : correctCount === total ? t("excellent") : correctCount >= 3 ? t("good") : t("keepLearning");
+    resultMessage.textContent = quizMode === "mistakes"
+      ? qc("resultRetry")(correctCount, total)
+      : qc("resultFull")(correctCount, total);
+
+    const badge = percentage === 100
+      ? { name: qc("badgePerfect"), description: qc("badgePerfectDesc"), icon: "✦" }
+      : percentage >= 80
+        ? { name: qc("badgeExpert"), description: qc("badgeExpertDesc"), icon: "◆" }
+        : percentage >= 40
+          ? { name: qc("badgeLearner"), description: qc("badgeLearnerDesc"), icon: "◈" }
+          : { name: qc("badgeBeginner"), description: qc("badgeBeginnerDesc"), icon: "✧" };
+
+    $("#quizPercent").textContent = `${percentage}%`;
+    $("#quizPercentLabel").textContent = qc("percent");
+    $("#quizResultRing").style.setProperty("--quiz-score", `${percentage}%`);
+    $("#quizCorrectCount").textContent = String(correctCount);
+    $("#quizWrongCount").textContent = String(wrongCount);
+    $("#quizTotalCount").textContent = String(total);
+    $("#quizCorrectLabel").textContent = qc("correctLabel");
+    $("#quizWrongLabel").textContent = qc("wrongLabel");
+    $("#quizTotalLabel").textContent = qc("totalLabel");
+    $("#quizAchievementCaption").textContent = qc("badgeCaption");
+    $("#quizAchievementName").textContent = badge.name;
+    $("#quizAchievementDescription").textContent = badge.description;
+    $("#quizAchievementIcon").textContent = badge.icon;
+
+    resultPanel.classList.toggle("quiz-perfect", percentage === 100);
+
+    const reviewButton = $("#quizReviewButton");
+    const retryButton = $("#quizRetryMistakesButton");
+    reviewButton.textContent = qc("reviewButton");
+    retryButton.textContent = qc("retryButton");
+
+    const hasFullAttempt = fullAttemptAnswers.some(Boolean);
+    const mistakes = fullAttemptAnswers.filter(answer => answer && !answer.isCorrect).length;
+    reviewButton.hidden = !hasFullAttempt;
+    retryButton.hidden = quizMode === "mistakes" || !hasFullAttempt;
+    retryButton.disabled = mistakes === 0;
+    retryButton.title = mistakes === 0 ? qc("noMistakes") : qc("retryButton");
+    retryButton.setAttribute("aria-label", mistakes === 0 ? qc("noMistakes") : qc("retryButton"));
+
+    if (quizMode === "full" && percentage === 100) {
+      retryButton.hidden = false;
+      retryButton.disabled = true;
+      retryButton.textContent = qc("noMistakes");
     }
+  }
+    // =========================================
+  // QUIZ — REVIEW ANSWERS
+  // =========================================
 
-    finalScore.textContent =
-      `${score}/${questions.length}`;
+  function renderReview() {
+    $("#quizReviewEyebrow").textContent = qc("reviewEyebrow");
+    $("#quizReviewTitle").textContent = qc("reviewTitle");
+    $("#quizReviewDescription").textContent = qc("reviewDescription");
+    $("#quizReviewBack").textContent = qc("backResults");
 
-    resultText.textContent =
-      score === questions.length
-        ? t("excellent")
-        : score >= 3
-          ? t("good")
-          : t("keepLearning");
+    const content = $("#quizReviewContent");
+    content.replaceChildren();
 
-    resultMessage.textContent =
-      t("resultMessage", score, questions.length);
+    const completedAnswers = fullAttemptAnswers.some(Boolean) ? fullAttemptAnswers : runAnswers;
+    const reviewItems = questions.map((question, index) => ({ question, answer: completedAnswers[index], index }));
+
+    reviewItems.forEach(({ question, answer, index }) => {
+      const localized = question[currentLanguage];
+      const item = document.createElement("article");
+      item.className = "quiz-review-item";
+
+      const status = document.createElement("span");
+      status.className = `quiz-review-status${answer && !answer.isCorrect ? " wrong" : ""}`;
+      status.textContent = answer ? (answer.isCorrect ? qc("correct") : qc("incorrect")) : qc("notAnswered");
+
+      const heading = document.createElement("h4");
+      heading.textContent = `${index + 1}. ${localized.question}`;
+
+      const yourAnswer = document.createElement("p");
+      yourAnswer.className = `quiz-review-answer${answer && !answer.isCorrect ? " is-wrong" : answer ? " is-correct" : ""}`;
+      const yourLabel = document.createElement("b");
+      yourLabel.textContent = `${qc("yourAnswer")}: `;
+      yourAnswer.append(yourLabel, document.createTextNode(answer ? localized.answers[answer.selectedIndex] : qc("notAnswered")));
+
+      const correctAnswer = document.createElement("p");
+      correctAnswer.className = "quiz-review-answer is-correct";
+      const correctLabel = document.createElement("b");
+      correctLabel.textContent = `${qc("correctAnswer")}: `;
+      correctAnswer.append(correctLabel, document.createTextNode(localized.answers[question.correct]));
+
+      const explanation = document.createElement("p");
+      explanation.className = "quiz-review-explanation";
+      const explanationLabel = document.createElement("b");
+      explanationLabel.textContent = `${qc("explanation")}: `;
+      explanation.append(explanationLabel, document.createTextNode(localized.explanation));
+
+      item.append(status, heading, yourAnswer, correctAnswer, explanation);
+      content.appendChild(item);
+    });
   }
 
+  $("#quizReviewButton").addEventListener("click", () => {
+    if (fullAttemptAnswers.some(Boolean) || runAnswers.some(Boolean)) {
+      quizStage = "review";
+      renderQuizStage();
+    }
+  });
+
+  $("#quizReviewBack").addEventListener("click", () => {
+    quizStage = "result";
+    renderQuizStage();
+  });
+
+  $("#quizRetryMistakesButton").addEventListener("click", () => {
+    if (!fullAttemptAnswers.some(answer => answer && !answer.isCorrect)) return;
+    startQuiz("mistakes");
+  });
+
   // =========================================
-  // QUIZ — NEXT QUESTION
+  // QUIZ — NEXT QUESTION + FINISH
   // =========================================
 
   if (nextQuestionButton) {
     nextQuestionButton.addEventListener("click", () => {
-      if (!hasAnswered || quizFinished) return;
+      if (!hasAnswered || quizFinished || quizStage !== "active") return;
 
-      if (questionIndex < questions.length - 1) {
+      if (questionIndex < activeQuestionIndices.length - 1) {
         questionIndex += 1;
-
         hasAnswered = false;
         selectedAnswer = null;
-
         loadQuestion();
-
         return;
       }
 
       quizFinished = true;
-
-      quizPanel.hidden = true;
-      resultPanel.hidden = false;
-
-      updateResult();
-
-      quizProgress.style.width = "100%";
-
-      const quizProgressWrap = $("#quizProgressWrap");
-
-      if (quizProgressWrap) {
-        quizProgressWrap.setAttribute(
-          "aria-valuenow",
-          "100"
-        );
-      }
+      quizStage = "result";
+      renderQuizStage();
+      updateQuizProgress();
     });
   }
 
@@ -990,28 +1342,18 @@
   // =========================================
 
   window.restartQuiz = () => {
+    quizMode = "full";
+    activeQuestionIndices = questions.map((_, index) => index);
+    runAnswers = [];
     questionIndex = 0;
     score = 0;
-
     hasAnswered = false;
     selectedAnswer = null;
     quizFinished = false;
-
-    quizPanel.hidden = false;
-    resultPanel.hidden = true;
-
-    quizProgress.style.width = "0%";
-
-    const quizProgressWrap = $("#quizProgressWrap");
-
-    if (quizProgressWrap) {
-      quizProgressWrap.setAttribute(
-        "aria-valuenow",
-        "0"
-      );
-    }
-
-    loadQuestion();
+    quizStage = "welcome";
+    fullAttemptAnswers = questions.map(() => null);
+    resultPanel.classList.remove("quiz-perfect");
+    renderQuizStage();
   };
 
   // =========================================
@@ -1026,7 +1368,7 @@
 
   renderTimer();
 
-  loadQuestion();
+  renderQuizStage();
 
   showSlide(0);
 
