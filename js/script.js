@@ -1030,35 +1030,38 @@
     }
   }
 
-  function startQuiz(mode = "full") {
-    quizMode = mode;
+function startQuiz(mode = "full") {
+  quizMode = mode;
 
-    if (mode === "mistakes") {
-      activeQuestionIndices = fullAttemptAnswers
-        .map((answer, index) => answer && !answer.isCorrect ? index : -1)
-        .filter(index => index !== -1);
+  if (mode === "mistakes") {
+    activeQuestionIndices = fullAttemptAnswers
+      .map((answer, index) =>
+        answer && !answer.isCorrect ? index : -1
+      )
+      .filter(index => index !== -1);
 
-      if (!activeQuestionIndices.length) {
-        updateResult();
-        return;
-      }
-    } else {
-      activeQuestionIndices = questions.map((_, index) => index);
-      fullAttemptAnswers = questions.map(() => null);
+    if (!activeQuestionIndices.length) {
+      quizStage = "result";
+      renderQuizStage();
+      return;
     }
-
-    runAnswers = activeQuestionIndices.map(() => null);
-    questionIndex = 0;
-    score = 0;
-    hasAnswered = false;
-    selectedAnswer = null;
-    quizFinished = false;
-
-    renderQuizStage();
+  } else {
+    activeQuestionIndices = questions.map((_, index) => index);
+    fullAttemptAnswers = questions.map(() => null);
   }
 
-  $("#quizStartButton").addEventListener("click", () => startQuiz("full"));
+  runAnswers = activeQuestionIndices.map(() => null);
+  questionIndex = 0;
+  score = 0;
+  hasAnswered = false;
+  selectedAnswer = null;
+  quizFinished = false;
 
+  // هذا هو السطر الذي كان ناقصاً
+  quizStage = "active";
+
+  renderQuizStage();
+}
   // =========================================
   // QUIZ — PROGRESS + QUESTION RENDERING
   // =========================================
