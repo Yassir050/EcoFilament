@@ -44,6 +44,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/ai-presenter.css">
+  <link rel="stylesheet" href="css/ai-chat.css">
 
 </head>
 
@@ -928,11 +929,117 @@
 
 </main>
 
+
+<!-- =========================================
+     AI CHAT — STANDALONE CHAT WINDOW
+========================================= -->
+
+<button
+  id="aiChatToggle"
+  class="ai-chat-toggle"
+  type="button"
+  aria-label="Open AI Chat"
+  aria-controls="aiChatWindow"
+  aria-expanded="false">
+  <span aria-hidden="true">✦</span>
+  <span class="en">AI Chat</span>
+  <span class="ar">المساعد الذكي</span>
+</button>
+
+<section
+  id="aiChatWindow"
+  class="ai-chat-window"
+  lang="en"
+  dir="ltr"
+  aria-label="EcoFilament AI Chat"
+  aria-hidden="true"
+  hidden>
+
+  <header class="ai-chat-header">
+
+    <div class="ai-chat-header-info">
+      <div class="ai-chat-avatar" aria-hidden="true">✦</div>
+
+      <div class="ai-chat-heading">
+        <h2>EcoFilament AI</h2>
+        <span class="en">Your recycling assistant</span>
+        <span class="ar">مساعدك في مجال إعادة التدوير</span>
+      </div>
+    </div>
+
+    <div class="ai-chat-actions">
+
+      <button
+        id="aiChatClear"
+        class="ai-chat-icon-btn"
+        type="button"
+        aria-label="Clear conversation"
+        title="Clear conversation">
+        ↻
+      </button>
+
+      <button
+        id="aiChatClose"
+        class="ai-chat-icon-btn"
+        type="button"
+        aria-label="Close chat"
+        title="Close chat">
+        ×
+      </button>
+
+    </div>
+
+  </header>
+
+  <div
+    id="aiChatMessages"
+    class="ai-chat-messages"
+    role="log"
+    aria-live="polite"
+    aria-relevant="additions text">
+
+  </div>
+
+  <div
+    id="aiChatStatus"
+    class="ai-chat-status"
+    role="status"
+    aria-live="polite">
+  </div>
+
+  <form id="aiChatForm" class="ai-chat-form">
+
+    <input
+      id="aiChatInput"
+      class="ai-chat-input"
+      type="text"
+      placeholder="Ask me about EcoFilament..."
+      autocomplete="off"
+      maxlength="2000"
+      aria-label="Your message"
+      required>
+
+    <button
+      id="aiChatSend"
+      class="ai-chat-send"
+      type="submit"
+      aria-label="Send message">
+      ➤
+    </button>
+
+  </form>
+
+</section>
+
+
 <!-- Core presentation logic -->
 <script src="js/script.js" defer></script>
 
 <!-- AI Presenter: isolated Phase 1A module -->
 <script src="js/ai-presenter.js" defer></script>
+
+<!-- AI Chat -->
+<script src="js/ai-chat.js" defer></script>
 
 <!-- Interactive 3D scene -->
 <script type="module" src="js/scene3d.js"></script>
