@@ -265,9 +265,11 @@
       ? "..."
       : translations[currentLanguage].send;
 
-    elements.status.textContent = loading
-      ? translations[currentLanguage].loading
-      : "";
+    // Preserve error and status messages when loading ends.
+    if (loading) {
+      elements.status.textContent =
+        translations[currentLanguage].loading;
+    }
 
     elements.form.setAttribute(
       "aria-busy",
@@ -282,6 +284,8 @@
   function openChat() {
     elements.window.hidden = false;
 
+    elements.window.setAttribute("aria-hidden", "false");
+
     elements.toggle.setAttribute("aria-expanded", "true");
 
     elements.toggle.setAttribute(
@@ -295,6 +299,8 @@
 
   function closeChat() {
     elements.window.hidden = true;
+
+    elements.window.setAttribute("aria-hidden", "true");
 
     elements.toggle.setAttribute("aria-expanded", "false");
 
@@ -386,8 +392,23 @@
 
       addMessage("assistant", reply);
 
+      elements.status.textContent = "";
+
     } catch (error) {
       console.error("[EcoFilament AI Chat]", error);
+
+      // Remove only the message whose request failed.
+      const lastMessage = conversation[conversation.length - 1];
+
+      if (
+        lastMessage &&
+        lastMessage.role === "user" &&
+        lastMessage.content === message
+      ) {
+        conversation.pop();
+        saveConversation();
+        renderMessages();
+      }
 
       const isNetworkError =
         error instanceof TypeError;
@@ -470,6 +491,7 @@
     watchLanguageChanges();
 
     elements.window.hidden = true;
+    elements.window.setAttribute("aria-hidden", "true");
 
     elements.toggle.setAttribute("aria-expanded", "false");
 
