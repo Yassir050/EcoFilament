@@ -1,0 +1,75 @@
+/* =========================================================
+   ECOFILAMENT AI PRESENTER — PHASE 1A
+   Isolated styles; does not alter the presentation theme.
+========================================================= */
+:root {
+  --aip-bg: rgba(16, 26, 23, .96);
+  --aip-panel: rgba(29, 48, 40, .94);
+  --aip-line: rgba(182, 243, 107, .2);
+  --aip-green: #39D98A;
+  --aip-lime: #B6F36B;
+  --aip-text: #F1F5F2;
+  --aip-muted: #B4C7BC;
+  --aip-shadow: 0 24px 80px rgba(0,0,0,.42);
+}
+
+.ai-presenter-launcher,
+.ai-presenter-panel,
+.ai-presenter-panel * { box-sizing: border-box; }
+
+.ai-presenter-launcher {
+  position: fixed; z-index: 1200; right: 24px; bottom: 24px;
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 54px; padding: 0 18px; border: 1px solid rgba(182,243,107,.38);
+  border-radius: 999px; color: #102019; background: linear-gradient(135deg,var(--aip-lime),var(--aip-green));
+  box-shadow: 0 12px 34px rgba(57,217,138,.24); font: 750 14px/1.2 inherit;
+  cursor: pointer; transition: transform .22s ease, box-shadow .22s ease;
+}
+.ai-presenter-launcher:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(57,217,138,.32); }
+.ai-presenter-launcher:focus-visible,
+.ai-presenter-panel button:focus-visible,
+.ai-presenter-panel textarea:focus-visible { outline: 3px solid var(--aip-lime); outline-offset: 3px; }
+.ai-presenter-launcher .aip-orb { width: 10px; height: 10px; border-radius: 50%; background: #123d2c; box-shadow: 0 0 0 5px rgba(16,61,44,.12); }
+
+.ai-presenter-panel {
+  position: fixed; z-index: 1199; right: 24px; bottom: 90px;
+  display: flex; flex-direction: column; width: min(390px, calc(100vw - 32px));
+  max-height: min(650px, calc(100dvh - 120px)); overflow: hidden;
+  color: var(--aip-text); background: var(--aip-bg); border: 1px solid var(--aip-line);
+  border-radius: 22px; box-shadow: var(--aip-shadow); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+  font-family: Inter, "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
+}
+.ai-presenter-panel[hidden] { display: none !important; }
+.aip-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:17px 18px; background:linear-gradient(135deg,rgba(57,217,138,.13),rgba(182,243,107,.04)); border-bottom:1px solid var(--aip-line); }
+.aip-brand { display:flex; align-items:center; gap:11px; min-width:0; }
+.aip-mark { display:grid; place-items:center; width:40px; height:40px; flex:none; border-radius:14px; color:#102019; background:linear-gradient(145deg,var(--aip-lime),var(--aip-green)); font-size:19px; font-weight:900; }
+.aip-heading { min-width:0; }
+.aip-heading strong { display:block; font-size:14px; letter-spacing:.02em; }
+.aip-heading span { display:block; margin-top:3px; color:var(--aip-muted); font-size:11px; }
+.aip-icon-btn { display:grid; place-items:center; width:34px; height:34px; flex:none; border:1px solid var(--aip-line); border-radius:11px; color:var(--aip-text); background:rgba(255,255,255,.04); cursor:pointer; font-size:17px; }
+.aip-body { overflow:auto; padding:17px; }
+.aip-context { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:14px; padding:9px 11px; border:1px solid var(--aip-line); border-radius:12px; color:var(--aip-muted); background:rgba(57,217,138,.055); font-size:11px; }
+.aip-context strong { overflow:hidden; color:var(--aip-lime); text-overflow:ellipsis; white-space:nowrap; }
+.aip-message { padding:13px 14px; border:1px solid rgba(255,255,255,.07); border-radius:15px 15px 15px 5px; background:var(--aip-panel); font-size:13px; line-height:1.75; white-space:pre-wrap; overflow-wrap:anywhere; }
+.aip-message + .aip-message { margin-top:10px; }
+.aip-message[dir="rtl"] { text-align:right; }
+.aip-message-label { display:block; margin-bottom:5px; color:var(--aip-lime); font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+.aip-explain { display:flex; flex-wrap:wrap; gap:8px; margin-top:13px; }
+.aip-action { display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:38px; padding:8px 12px; border:1px solid var(--aip-line); border-radius:11px; color:var(--aip-text); background:rgba(255,255,255,.045); cursor:pointer; font-size:12px; font-weight:700; }
+.aip-action.primary { border-color:transparent; color:#102019; background:linear-gradient(135deg,var(--aip-lime),var(--aip-green)); }
+.aip-action:disabled { opacity:.42; cursor:not-allowed; }
+.aip-status { margin-top:14px; padding:11px 12px; border:1px dashed rgba(182,243,107,.25); border-radius:12px; color:var(--aip-muted); font-size:11px; line-height:1.65; }
+.aip-status b { color:var(--aip-lime); }
+.aip-footer { padding:12px 17px 15px; border-top:1px solid var(--aip-line); color:var(--aip-muted); font-size:10px; line-height:1.55; }
+.ai-presenter-panel[dir="rtl"] .aip-header,
+.ai-presenter-panel[dir="rtl"] .aip-context { direction:rtl; }
+.ai-presenter-panel[dir="rtl"] .aip-message { direction:rtl; text-align:right; }
+.ai-presenter-panel[dir="rtl"] .aip-explain { direction:rtl; }
+
+@media (max-width: 600px) {
+  .ai-presenter-launcher { right:16px; bottom:16px; min-height:49px; padding:0 15px; }
+  .ai-presenter-panel { right:12px; bottom:76px; width:calc(100vw - 24px); max-height:calc(100dvh - 94px); border-radius:18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ai-presenter-launcher { transition:none; }
+}
