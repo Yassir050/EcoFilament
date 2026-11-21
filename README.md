@@ -171,7 +171,14 @@ Interested in programming, emerging technologies, 3D visualization, and environm
   Made with 💙 for technology and the environment.
 </p>
 
+## Backend Deployment
+
+EcoFilament AI Backend — Phase 1 foundation.
+
+AI Chat and NVIDIA integration are being prepared for Phase 2.
+
 ## 🧪 Automated Tests
+
 
 The project includes Playwright browser tests for slide navigation, language switching, the quiz flow, and the mobile layout.
 
