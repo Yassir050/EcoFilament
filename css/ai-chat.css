@@ -13,13 +13,13 @@
   --chat-text: #F1F5F2;
   --chat-muted: #A8B8AE;
   --chat-border: rgba(182, 243, 107, 0.16);
-  --chat-glass: rgba(16, 26, 23, 0.94);
+  --chat-glass: rgba(16, 26, 23, 0.96);
   --chat-user: rgba(57, 217, 138, 0.15);
   --chat-assistant: rgba(255, 255, 255, 0.055);
 }
 
 /* =========================================
-   GLOBAL CHAT CONTAINER
+   CHAT WINDOW
    ========================================= */
 
 .ai-chat-window,
@@ -59,7 +59,7 @@
   display: none !important;
 }
 
-html[dir="rtl"] #aiChatWindow {
+#aiChatWindow[dir="rtl"] {
   right: auto;
   left: 24px;
   transform-origin: bottom left;
@@ -116,26 +116,30 @@ html[dir="rtl"] #aiChatWindow {
   min-width: 0;
 }
 
-.ai-chat-heading h3 {
+.ai-chat-heading h2 {
   margin: 0;
 
   color: var(--chat-text);
   font-size: 14px;
   font-weight: 750;
+  line-height: 1.4;
   letter-spacing: 0.1px;
 }
 
-.ai-chat-heading p {
-  margin: 4px 0 0;
+.ai-chat-heading span {
+  display: block;
+  margin-top: 4px;
 
   color: var(--chat-muted);
   font-size: 11px;
+  line-height: 1.5;
 }
 
 .ai-chat-actions {
   display: flex;
   align-items: center;
   gap: 7px;
+  flex-shrink: 0;
 }
 
 /* =========================================
@@ -156,6 +160,7 @@ html[dir="rtl"] #aiChatWindow {
   border: 1px solid transparent;
   border-radius: 10px;
 
+  font-family: inherit;
   font-size: 16px;
   cursor: pointer;
 
@@ -254,12 +259,12 @@ html[dir="rtl"] #aiChatWindow {
   border-bottom-left-radius: 5px;
 }
 
-html[dir="rtl"] .ai-chat-message--user .ai-chat-bubble {
+#aiChatWindow[dir="rtl"] .ai-chat-message--user .ai-chat-bubble {
   border-bottom-right-radius: 15px;
   border-bottom-left-radius: 5px;
 }
 
-html[dir="rtl"] .ai-chat-message--assistant .ai-chat-bubble {
+#aiChatWindow[dir="rtl"] .ai-chat-message--assistant .ai-chat-bubble {
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 5px;
 }
@@ -340,6 +345,7 @@ html[dir="rtl"] .ai-chat-message--assistant .ai-chat-bubble {
   border: none;
   border-radius: 12px;
 
+  font-family: inherit;
   font-size: 17px;
   font-weight: 800;
 
@@ -377,6 +383,7 @@ html[dir="rtl"] .ai-chat-message--assistant .ai-chat-bubble {
 
   color: var(--chat-accent);
   font-size: 11px;
+  line-height: 1.5;
   text-align: center;
 }
 
@@ -395,12 +402,14 @@ html[dir="rtl"] .ai-chat-message--assistant .ai-chat-bubble {
   bottom: 23px;
   z-index: 10000;
 
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
 
-  width: 54px;
-  height: 54px;
-  padding: 0;
+  min-width: 54px;
+  min-height: 54px;
+  padding: 0 15px;
 
   color: #101A17;
   background: linear-gradient(
@@ -412,7 +421,10 @@ html[dir="rtl"] .ai-chat-message--assistant .ai-chat-bubble {
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 18px;
 
-  font-size: 22px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 750;
+
   cursor: pointer;
 
   box-shadow:
@@ -426,12 +438,19 @@ html[dir="rtl"] .ai-chat-message--assistant .ai-chat-bubble {
 
 #aiChatToggle:hover {
   transform: translateY(-3px) scale(1.04);
+
   box-shadow:
     0 12px 32px rgba(0, 0, 0, 0.35),
     0 0 32px rgba(57, 217, 138, 0.25);
 }
 
-html[dir="rtl"] #aiChatToggle {
+#aiChatToggle > span[aria-hidden="true"] {
+  font-size: 20px;
+  line-height: 1;
+}
+
+html[dir="rtl"] #aiChatToggle,
+body.lang-ar #aiChatToggle {
   right: auto;
   left: 25px;
 }
@@ -445,6 +464,10 @@ html[dir="rtl"] #aiChatToggle {
 .ai-chat-input:focus-visible {
   outline: 2px solid var(--chat-accent);
   outline-offset: 3px;
+}
+
+.ai-chat-window button:disabled {
+  cursor: not-allowed;
 }
 
 /* =========================================
@@ -490,7 +513,7 @@ html[dir="rtl"] #aiChatToggle {
     border-radius: 19px;
   }
 
-  html[dir="rtl"] #aiChatWindow {
+  #aiChatWindow[dir="rtl"] {
     right: auto;
     left: 12px;
   }
@@ -499,12 +522,14 @@ html[dir="rtl"] #aiChatToggle {
     right: 17px;
     bottom: 16px;
 
-    width: 51px;
-    height: 51px;
+    min-height: 51px;
+    padding: 0 13px;
+
     border-radius: 16px;
   }
 
-  html[dir="rtl"] #aiChatToggle {
+  html[dir="rtl"] #aiChatToggle,
+  body.lang-ar #aiChatToggle {
     right: auto;
     left: 17px;
   }
@@ -518,6 +543,30 @@ html[dir="rtl"] #aiChatToggle {
     font-size: 12px;
   }
 }
+
+@media (max-width: 360px) {
+  .ai-chat-header {
+    padding: 12px;
+  }
+
+  .ai-chat-actions {
+    gap: 5px;
+  }
+
+  .ai-chat-icon-btn {
+    width: 31px;
+    height: 31px;
+  }
+
+  .ai-chat-form {
+    gap: 7px;
+    padding: 10px;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
 
 @media (prefers-reduced-motion: reduce) {
   #aiChatWindow,
