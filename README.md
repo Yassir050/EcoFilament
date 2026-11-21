@@ -157,8 +157,7 @@ EcoFilament/
 ## 👨‍💻 Author
 
 **Yassir**  
-Student • Technology Enthusiast
-1337
+Student • Technology Enthusiast • 1337
 
 Interested in programming, emerging technologies, 3D visualization, and environmental innovation.
 
