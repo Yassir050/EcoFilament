@@ -143,7 +143,7 @@
       const clone = slide.cloneNode(true);
 
       clone.querySelectorAll(
-        "button, script, style, svg, canvas, video, audio, [aria-hidden='true'], .controls, .dots, .navigation"
+        "button, script, style, svg, canvas, video, audio, [aria-hidden='true'], .controls, .dots, .navigation, .kicker"
       ).forEach(node => node.remove());
 
       clone.querySelectorAll(lang === "ar" ? ".en" : ".ar")
