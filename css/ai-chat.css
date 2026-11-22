@@ -393,12 +393,15 @@
 
 /* =========================================
    FLOATING CHAT TOGGLE
+   AI CHAT: LEFT
+   AI PRESENTER: RIGHT
    ========================================= */
 
 .ai-chat-toggle,
 #aiChatToggle {
   position: fixed;
-  right: 25px;
+  left: 25px;
+  right: auto;
   bottom: 23px;
   z-index: 10000;
 
@@ -447,12 +450,6 @@
 #aiChatToggle > span[aria-hidden="true"] {
   font-size: 20px;
   line-height: 1;
-}
-
-html[dir="rtl"] #aiChatToggle,
-body.lang-ar #aiChatToggle {
-  right: auto;
-  left: 25px;
 }
 
 /* =========================================
@@ -519,19 +516,14 @@ body.lang-ar #aiChatToggle {
   }
 
   #aiChatToggle {
-    right: 17px;
+    left: 17px;
+    right: auto;
     bottom: 16px;
 
     min-height: 51px;
     padding: 0 13px;
 
     border-radius: 16px;
-  }
-
-  html[dir="rtl"] #aiChatToggle,
-  body.lang-ar #aiChatToggle {
-    right: auto;
-    left: 17px;
   }
 
   .ai-chat-messages {
