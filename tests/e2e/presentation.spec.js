@@ -55,8 +55,8 @@ test('navigates to the quiz and restarts it', async ({ page }) => {
 
   await page.locator('[data-action="restart-quiz"]').click();
 
-  await expect(page.locator('#quizPanel')).toBeVisible();
-  await expect(page.locator('#qCount')).toContainText('Question 1');
+  await expect(page.locator('#quizWelcomePanel')).toBeVisible();
+  await expect(page.locator('#quizStartButton')).toBeVisible();
 });
 
 test('supports the mobile viewport without horizontal page overflow', async ({ page }) => {
