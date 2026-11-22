@@ -37,7 +37,7 @@ test('navigates to the quiz and restarts it', async ({ page }) => {
 
   await expect(page.locator('#quizPanel')).toBeVisible();
   await expect(page.locator('#qCount')).toContainText('Question 1');
-  await expect(page.locator('#options button')).toHaveCount(4);
+  await expect(page.locator('#options button')).toHaveCount(3);
 
   // The last option is intentionally incorrect.
   await page.locator('#options button').last().click();
