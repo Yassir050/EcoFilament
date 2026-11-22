@@ -1,94 +1,172 @@
-# EcoFilament AI Backend
+# 🌱 EcoFilament AI Backend
 
-FastAPI backend powering the AI features of **EcoFilament**, an educational presentation about recycling plastic into 3D-printing filament.
+**The intelligent backend powering EcoFilament's educational experience.**
 
-The backend connects the EcoFilament frontend to NVIDIA AI services while keeping API credentials securely on the server.
+EcoFilament is an interactive educational project that explores the process of transforming recycled plastic into 3D-printing filament. This repository contains the FastAPI backend responsible for connecting the frontend to NVIDIA AI services securely.
 
-## Current Status
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/>
+  <img src="https://img.shields.io/badge/AI-NVIDIA-76B900?style=for-the-badge&logo=nvidia&logoColor=white" alt="NVIDIA AI"/>
+  <img src="https://img.shields.io/badge/Deployment-Enzonic-6366F1?style=for-the-badge" alt="Deployment"/>
+</p>
 
-- **Backend:** FastAPI
-- **Language:** Python 3.10+
-- **AI Chat Provider:** NVIDIA
-- **AI Model:** `nvidia/nemotron-3.5-bolt-e4b`
-- **Deployment:** Enzonic
-- **Frontend:** GitHub Pages
-
-## Architecture
-
-```text
-EcoFilament Frontend
-        |
-        | HTTPS / REST API
-        v
-FastAPI Backend
-        |
-        | Secure API Request
-        v
-NVIDIA AI API
-        |
-        v
-AI Response
-        |
-        v
-EcoFilament Chat Interface
-```
-
-The NVIDIA API key is stored in the backend environment. It must never be exposed in frontend JavaScript or committed to GitHub.
-
-## Features
-
-### AI Chat
-
-- NVIDIA-powered AI responses.
-- Arabic and English conversations.
-- Conversation context maintained by the frontend during the current session.
-- Message history validation.
-- Request timeout handling.
-- Safe error responses.
-- Restricted CORS origins.
-
-### Health Monitoring
-
-- Root service information endpoint.
-- Health check endpoint.
-- NVIDIA configuration status.
-
-### Future Development
-
-- AI Presenter with professional text-to-speech.
-- Improved Arabic and English speech generation.
-- More advanced presentation voice controls.
-
-**Note:** AI Presenter currently uses browser-based SpeechSynthesis. NVIDIA TTS integration is not yet part of the deployed backend.
+<p align="center">
+  <a href="https://ecofilament-ai.enzonic.dev">Backend</a> ·
+  <a href="https://ecofilament-ai.enzonic.dev/docs">API Documentation</a> ·
+  <a href="https://ecofilament-ai.enzonic.dev/health">Health Check</a> ·
+  <a href="https://github.com/Yassir050/EcoFilament">Main Repository</a>
+</p>
 
 ---
 
-## Requirements
+## 📌 Overview
 
-- Python 3.10 or newer.
-- Internet connection.
-- NVIDIA API key for AI Chat functionality.
-- Git (optional).
+The backend acts as a secure communication layer between the EcoFilament frontend and NVIDIA AI services.
 
-## Project Structure
+It handles incoming chat requests, validates conversation data, communicates with the AI provider, and returns responses to the frontend.
+
+### Current Status
+
+| Component | Technology |
+|---|---|
+| Backend Framework | FastAPI |
+| Programming Language | Python 3.10+ |
+| AI Provider | NVIDIA |
+| AI Model | `nvidia/nemotron-3.5-bolt-e4b` |
+| Hosting | Enzonic |
+| Frontend | GitHub Pages |
+| Communication | HTTPS / REST API |
+
+---
+
+## 🏗️ Architecture
+
+The backend follows a simple client-server architecture.
+
+```mermaid
+flowchart TD
+    A["EcoFilament Frontend"] -->|"HTTPS / REST"| B["FastAPI Backend"]
+    B --> C["Request Validation"]
+    C --> D["NVIDIA AI Service"]
+    D --> B
+    B -->|"AI Response"| A
+
+    E["Environment Variables"] -.->|"Secure Credentials"| B
+
+    style A fill:#163D32,color:#fff
+    style B fill:#087F5B,color:#fff
+    style C fill:#285B48,color:#fff
+    style D fill:#76B900,color:#fff
+    style E fill:#344054,color:#fff
+```
+
+### Security Architecture
+
+- NVIDIA API credentials remain exclusively on the backend.
+- The frontend never receives the NVIDIA API key.
+- Requests are validated before processing.
+- CORS is restricted to configured frontend origins.
+- API communication uses HTTPS in production.
+
+---
+
+## ✨ Features
+
+### 🤖 AI Chat
+
+- NVIDIA-powered AI responses.
+- Arabic and English conversation support.
+- Conversation context maintained by the frontend during the current session.
+- Incoming message and history validation.
+- Request timeout handling.
+- Controlled error responses.
+- Restricted CORS configuration.
+
+### ❤️ Health Monitoring
+
+The backend exposes endpoints for monitoring service availability and configuration.
+
+- Root service information.
+- Backend health status.
+- NVIDIA configuration status.
+
+### 🔐 Credential Protection
+
+Sensitive credentials are stored in server-side environment variables.
+
+The NVIDIA API key must never be exposed in frontend code or committed to the public repository.
+
+---
+
+## 🔌 API Reference
+
+Base URL:
+
+```text
+https://ecofilament-ai.enzonic.dev
+```
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/` | Service information |
+| GET | `/health` | Health and configuration status |
+| POST | `/api/chat` | NVIDIA-powered AI Chat |
+| GET | `/docs` | Interactive API documentation |
+
+### Health Check
+
+```http
+GET /health
+```
+
+The endpoint reports the backend's operational status and whether NVIDIA credentials are configured.
+
+**Important:** A successful health check does not guarantee that the external NVIDIA service is reachable.
+
+### Interactive Documentation
+
+Explore the actual request schemas, response formats, and validation rules through FastAPI Swagger UI:
+
+[Open API Documentation](https://ecofilament-ai.enzonic.dev/docs)
+
+---
+
+## 📁 Project Structure
 
 ```text
 backend/
 ├── main.py
 ├── requirements.txt
 ├── .env.example
-├── .env
+├── .env                  # Local only - never commit
 └── README.md
 ```
 
-`.env` is a local configuration file and must not be committed to the repository.
+| File | Purpose |
+|---|---|
+| `main.py` | FastAPI application and API routes |
+| `requirements.txt` | Python dependencies |
+| `.env.example` | Environment configuration template |
+| `.env` | Local environment secrets |
+| `README.md` | Backend documentation |
 
-## Local Installation
+---
 
-### 1. Open the backend folder
+## ⚙️ Getting Started
+
+### Requirements
+
+- Python 3.10 or newer.
+- Internet connection.
+- NVIDIA API key.
+- Git (optional).
+
+### 1. Clone the repository
 
 ```powershell
-cd backend
+git clone https://github.com/Yassir050/EcoFilament.git
+cd EcoFilament/backend
 ```
 
 ### 2. Create a virtual environment
@@ -114,27 +192,29 @@ pip install -r requirements.txt
 
 ### 5. Configure environment variables
 
-Copy the example environment file:
+Create a local environment file:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Open `.env` and configure the required NVIDIA API key:
+Add your NVIDIA API key to `.env`:
 
 ```env
 NVIDIA_API_KEY=your_nvidia_api_key
 ```
 
-Replace the example value with your own key. Never publish the real value.
+Replace the example value with your actual key.
 
-### 6. Start the server
+**Never commit `.env` or expose its contents.**
+
+### 6. Start the backend
 
 ```powershell
 uvicorn main:app --reload
 ```
 
-The local backend should now be available at:
+The local server will be available at:
 
 ```text
 http://127.0.0.1:8000
@@ -142,108 +222,84 @@ http://127.0.0.1:8000
 
 ---
 
-## API Endpoints
+## 🧪 Testing & Validation
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| GET | `/` | Backend service information |
-| GET | `/health` | Health and configuration status |
-| POST | `/api/chat` | Send a message to the AI Chat service |
-| GET | `/docs` | Interactive API documentation |
+Before deploying backend changes, verify the following:
 
-### Health Check
+- [ ] Backend starts successfully.
+- [ ] Root endpoint responds correctly.
+- [ ] Health check reports the expected status.
+- [ ] Swagger documentation loads.
+- [ ] AI Chat accepts valid requests.
+- [ ] Arabic responses work correctly.
+- [ ] English responses work correctly.
+- [ ] Invalid requests return controlled errors.
+- [ ] API credentials are not exposed.
+- [ ] CORS configuration matches the intended frontend origins.
 
-Open:
-
-```text
-http://127.0.0.1:8000/health
-```
-
-The response should indicate:
-
-- `status: ok`
-- The backend service is running.
-- Whether the NVIDIA API key is configured.
-
-The configuration status does not guarantee that NVIDIA is reachable. A successful AI Chat request is a separate connectivity test.
-
-### Interactive API Documentation
-
-Open:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
-Use the Swagger interface to inspect the available endpoints and their actual request and response schemas.
-
-### AI Chat
-
-Endpoint:
-
-```http
-POST /api/chat
-```
-
-The endpoint accepts chat requests and communicates with NVIDIA through the backend.
-
-For the exact request format, required fields, validation rules, and response structure, refer to the deployed API documentation at `/docs`.
+The frontend also has a separate Playwright end-to-end testing workflow through GitHub Actions.
 
 ---
 
-## Environment Variables
+## 🚀 Deployment
 
-| Variable | Purpose |
+The production backend is hosted on Enzonic.
+
+| Resource | Link |
 |---|---|
-| `NVIDIA_API_KEY` | Authenticates requests to NVIDIA AI services |
+| Production API | [ecofilament-ai.enzonic.dev](https://ecofilament-ai.enzonic.dev) |
+| Health Check | [View Status](https://ecofilament-ai.enzonic.dev/health) |
+| Swagger UI | [API Documentation](https://ecofilament-ai.enzonic.dev/docs) |
+| Deployment Dashboard | [Enzonic Dashboard](https://deploy.enzonic.com/projects/01m7zt0vh8sdpf0kzfhyjhke94) |
+| Frontend | [EcoFilament Website](https://yassir050.github.io/EcoFilament/) |
 
-Keep environment variables on the server. Do not place API keys in:
+### Production Configuration
 
-- `index.html`
-- Frontend JavaScript files
-- Public GitHub repositories
-- Browser local storage
-- Client-side configuration files
+Configure `NVIDIA_API_KEY` through the Enzonic deployment environment settings.
 
----
-
-## Deployment
-
-The EcoFilament backend is deployed through Enzonic.
-
-The deployed service is available at:
-
-https://ecofilament-ai.enzonic.dev
-
-Useful links:
-
-- [Backend Service](https://ecofilament-ai.enzonic.dev)
-- [Health Check](https://ecofilament-ai.enzonic.dev/health)
-- [API Documentation](https://ecofilament-ai.enzonic.dev/docs)
-- [Enzonic Deployment Dashboard](https://deploy.enzonic.com/projects/01m7zt0vh8sdpf0kzfhyjhke94)
-
-Configure `NVIDIA_API_KEY` through the deployment environment settings. Do not commit production credentials.
+Do not place production credentials in GitHub, frontend JavaScript, or public configuration files.
 
 ---
 
-## Testing
+## 🛡️ Security Guidelines
 
-Before deploying backend changes:
+Security is a core requirement of this backend.
 
-1. Install the required Python dependencies.
-2. Start the backend locally.
-3. Check `/` and `/health`.
-4. Inspect `/docs`.
-5. Test `/api/chat` with a valid request.
-6. Verify Arabic and English responses.
-7. Verify that invalid requests return appropriate errors.
-8. Check that secrets are not included in responses or logs.
-
-The frontend also has Playwright end-to-end tests. These are executed separately through GitHub Actions.
+- Keep API credentials exclusively on the server.
+- Never commit `.env`.
+- Restrict CORS to trusted frontend origins.
+- Validate incoming messages and conversation history.
+- Apply suitable request timeouts and request limits.
+- Avoid logging confidential information.
+- Rotate exposed credentials immediately.
+- Remember that CORS is not a replacement for API authentication.
 
 ---
 
-## Troubleshooting
+## 🗺️ Roadmap
+
+| Feature | Status |
+|---|---|
+| Initial FastAPI backend | ✅ Completed |
+| NVIDIA AI Chat integration | ✅ Completed |
+| Arabic and English support | ✅ Completed |
+| Frontend integration | ✅ Completed |
+| Production deployment | ✅ Completed |
+| Playwright test workflow | ✅ Implemented |
+| NVIDIA-powered AI Presenter TTS | 🔜 Planned |
+| Improved multilingual speech generation | 🔜 Planned |
+| Advanced backend monitoring | 🔜 Planned |
+| Additional production protections | 🔜 Planned |
+
+### 🎙️ AI Presenter — Future Development
+
+The current AI Presenter uses the browser's native `SpeechSynthesis` functionality.
+
+NVIDIA-powered text-to-speech is a future development and is not currently integrated into the deployed backend.
+
+---
+
+## 🔧 Troubleshooting
 
 ### Backend does not start
 
@@ -251,61 +307,47 @@ Check:
 
 - Python version.
 - Installed dependencies.
-- Correct working directory.
+- Current working directory.
 - Port availability.
-- Enzonic deployment logs when running in production.
+- Deployment logs.
 
 ### NVIDIA API request fails
 
 Check:
 
-- Whether `NVIDIA_API_KEY` is configured.
-- Whether the key is valid.
+- NVIDIA API key configuration.
+- Credential validity.
 - NVIDIA service availability.
-- Request timeout and backend logs.
+- Request timeout settings.
+- Backend error logs.
 
-Never print the API key while debugging.
+Never print API keys during debugging.
 
 ### CORS errors
 
-Verify that the frontend origin is included in the backend's allowed CORS origins.
+Verify that the frontend's exact origin is included in the backend's allowed CORS origins.
 
-Remember that CORS is a browser security mechanism, not API authentication.
+CORS controls browser access; it does not authenticate API clients.
 
-### Health check succeeds but AI Chat fails
+### Health check works, but AI Chat fails
 
-A successful health check confirms that the backend is running. It does not necessarily confirm that the external NVIDIA API is reachable.
+The health endpoint confirms backend availability, not external AI provider availability.
 
-Test `/api/chat` separately.
-
----
-
-## Security
-
-- Never commit `.env`.
-- Never publish API keys or access tokens.
-- Keep NVIDIA credentials exclusively on the backend.
-- Restrict CORS to trusted frontend origins.
-- Validate incoming messages and conversation history.
-- Apply appropriate request limits and timeout handling.
-- Avoid logging confidential information.
-- Rotate credentials immediately if they are exposed.
-
-## Development Roadmap
-
-- [x] Initial FastAPI backend.
-- [x] NVIDIA AI Chat integration.
-- [x] Arabic and English chat support.
-- [x] Frontend integration.
-- [x] Backend deployment.
-- [x] Playwright end-to-end test workflow.
-- [ ] NVIDIA-powered AI Presenter TTS.
-- [ ] Improved speech quality and presentation delivery.
-- [ ] Additional backend monitoring and production protections.
+Test the `/api/chat` endpoint independently.
 
 ---
 
-**Project:** EcoFilament  
-**Repository:** https://github.com/Yassir050/EcoFilament  
-**Backend:** FastAPI  
-**AI Provider:** NVIDIA
+## 🔗 Related Resources
+
+- [EcoFilament Main Repository](https://github.com/Yassir050/EcoFilament)
+- [EcoFilament Live Website](https://yassir050.github.io/EcoFilament/)
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [NVIDIA Developer Platform](https://build.nvidia.com/)
+- [Python Documentation](https://docs.python.org/3/)
+
+---
+
+<p align="center">
+  <strong>🌱 EcoFilament</strong><br/>
+  <sub>Turning plastic waste into possibilities.</sub>
+</p>
