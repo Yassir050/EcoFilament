@@ -1,3 +1,4 @@
+
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
@@ -13,11 +14,13 @@ test('loads the presentation and exposes all twelve slides', async ({ page }) =>
 
 test('switches between English LTR and Arabic RTL', async ({ page }) => {
   await page.locator('#langBtn').click();
+
   await expect(page.locator('html')).toHaveAttribute('lang', 'ar');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
   await expect(page.locator('#langBtn')).toHaveAttribute('aria-pressed', 'true');
 
   await page.locator('#langBtn').click();
+
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
   await expect(page.locator('#langBtn')).toHaveAttribute('aria-pressed', 'false');
@@ -25,10 +28,18 @@ test('switches between English LTR and Arabic RTL', async ({ page }) => {
 
 test('navigates to the quiz and restarts it', async ({ page }) => {
   await page.getByRole('button', { name: 'Go to Quiz' }).click();
-  await expect(page.locator('#slideCount')).toHaveText('12 / 12');
-  await expect(page.locator('#qCount')).toContainText('Question 1');
 
-  // The last option is intentionally incorrect in each quiz question.
+  await expect(page.locator('#slideCount')).toHaveText('12 / 12');
+  await expect(page.locator('#quizStartButton')).toBeVisible();
+
+  // Start the quiz before selecting an answer.
+  await page.locator('#quizStartButton').click();
+
+  await expect(page.locator('#quizPanel')).toBeVisible();
+  await expect(page.locator('#qCount')).toContainText('Question 1');
+  await expect(page.locator('#options button')).toHaveCount(4);
+
+  // The last option is intentionally incorrect.
   await page.locator('#options button').last().click();
   await expect(page.locator('#nextQuestion')).toBeEnabled();
 
@@ -38,10 +49,12 @@ test('navigates to the quiz and restarts it', async ({ page }) => {
   }
 
   await page.locator('#nextQuestion').click();
+
   await expect(page.locator('#resultPanel')).toBeVisible();
   await expect(page.locator('#finalScore')).toHaveText('0/5');
 
   await page.locator('[data-action="restart-quiz"]').click();
+
   await expect(page.locator('#quizPanel')).toBeVisible();
   await expect(page.locator('#qCount')).toContainText('Question 1');
 });
