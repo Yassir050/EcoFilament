@@ -9,8 +9,8 @@
 <script type="importmap">
 {
   "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+    "three": "./vendor/three/build/three.module.js",
+    "three/addons/": "./vendor/three/examples/jsm/"
   }
 }
 </script>
@@ -40,7 +40,6 @@
 
   <title>EcoFilament | From Plastic Waste to 3D Printing Filament</title>
 
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/ai-presenter.css">
   <link rel="stylesheet" href="css/ai-chat.css">
@@ -1042,6 +1041,27 @@
 
 <!-- Interactive 3D scene -->
 <script type="module" src="js/scene3d.js"></script>
+
+<!-- EcoFilament Service Worker -->
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js")
+        .then((registration) => {
+          console.log(
+            "[EcoFilament] Service Worker registered:",
+            registration.scope
+          );
+        })
+        .catch((error) => {
+          console.error(
+            "[EcoFilament] Service Worker registration failed:",
+            error
+          );
+        });
+    });
+  }
+</script>
 
 </body>
 </html>
