@@ -2601,3 +2601,61 @@ body.ef-v4 .brand-text > span {
         flex-basis: 25px;
     }
 }
+/* =========================================
+   ECOFILAMENT — COMPACT TOPBAR
+========================================= */
+
+body.ef-v4 .topbar {
+  min-height: 85px;
+  padding: 14px 4%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+body.ef-v4 .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+body.ef-v4 .brand-logo {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px;
+  max-width: 42px;
+  object-fit: contain;
+  flex: 0 0 42px;
+  border-radius: 10px;
+}
+
+body.ef-v4 .brand-text {
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+body.ef-v4 .brand-text > span {
+  color: var(--v4-green);
+}
+
+@media (max-width: 600px) {
+  body.ef-v4 .topbar {
+    min-height: 65px;
+    padding: 10px 3%;
+  }
+
+  body.ef-v4 .brand-logo {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px;
+    flex-basis: 32px;
+  }
+
+  body.ef-v4 .brand-text {
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+  }
+}
