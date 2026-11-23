@@ -53,11 +53,11 @@
       to   { opacity: 1; transform: translate3d(0, 0, 0); }
     }
     .slide.ef-slide-enter {
-      animation: efSlideEnter 620ms cubic-bezier(.2,.75,.25,1) both;
+      animation: efSlideEnter 420ms cubic-bezier(.2,.75,.25,1) both;
       will-change: opacity, transform, filter;
     }
     .slide .ef-reveal {
-      animation: efElementReveal 560ms cubic-bezier(.2,.75,.25,1) both;
+      animation: efElementReveal 380ms cubic-bezier(.2,.75,.25,1) both;
       animation-delay: var(--ef-reveal-delay, 0ms);
     }
     #progress { transition: width 520ms cubic-bezier(.2,.75,.25,1); }
@@ -95,7 +95,7 @@
       element.classList.remove("ef-reveal");
       element.style.setProperty(
         "--ef-reveal-delay",
-        `${Math.min(index * 45, 360)}ms`
+        `${Math.min(index * 32, 256)}ms`
       );
     });
 
@@ -358,7 +358,7 @@
   const quizPanel = $("#quizPanel");
   const resultPanel = $("#resultPanel");
 
-  const quizWelcomePanel = document.createElement("section");
+    const quizWelcomePanel = document.createElement("section");
   quizWelcomePanel.className = "panel quiz-screen quiz-welcome";
   quizWelcomePanel.id = "quizWelcomePanel";
   quizWelcomePanel.setAttribute("aria-labelledby", "quizWelcomeTitle");
@@ -498,7 +498,8 @@
     .quiz-instructions { margin:13px 0 18px !important; padding-inline-start:13px; border-inline-start:3px solid #39D98A; font-size:.9rem; }
     .quiz-start-button { min-width:190px; }
     #quizPanel { padding:clamp(18px,3vw,30px); }
-    .quiz-meta { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; color:#DCE9E0; }
+
+        .quiz-meta { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; color:#DCE9E0; }
     #quizProgressWrap { height:8px; margin-bottom:12px; background:rgba(182,243,107,.12); border-radius:30px; overflow:hidden; }
     #quizProgress { background:linear-gradient(90deg,#39D98A,#B6F36B); border-radius:30px; transition:width 500ms cubic-bezier(.2,.75,.25,1); }
     .quiz-live-status { margin:0 0 18px; color:#9FB5A8; font-size:.78rem; }
@@ -719,7 +720,7 @@
     progress.style.width = `${percentage}%`;
     progress.setAttribute("aria-valuenow", String(Math.round(percentage)));
 
-    const progressBar = $("#presentationProgress");
+        const progressBar = $("#presentationProgress");
     if (progressBar) {
       progressBar.setAttribute(
         "aria-valuenow",
@@ -1091,8 +1092,7 @@ function startQuiz(mode = "full") {
     }
     if (status) status.textContent = qc("progress")(completed, total);
   }
-
-  function getCurrentQuestion() {
+    function getCurrentQuestion() {
     const sourceIndex = activeQuestionIndices[questionIndex];
     return questions[sourceIndex][currentLanguage];
   }
@@ -1320,8 +1320,7 @@ function startQuiz(mode = "full") {
     if (!fullAttemptAnswers.some(answer => answer && !answer.isCorrect)) return;
     startQuiz("mistakes");
   });
-
-  // =========================================
+    // =========================================
   // QUIZ — NEXT QUESTION + FINISH
   // =========================================
 
