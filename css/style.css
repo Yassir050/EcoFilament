@@ -2556,3 +2556,48 @@ body.ef-v4 .visual {
     transition-duration: .01ms !important;
   }
 }
+
+/* =========================================================
+   ECOFILAMENT BRAND LOGO
+   Favicon icon beside the presentation title
+========================================================= */
+
+body.ef-v4 .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+body.ef-v4 .brand-logo {
+    display: block;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+body.ef-v4 .brand-text {
+    color: var(--v4-text);
+    font-size: inherit;
+    font-weight: 900;
+    letter-spacing: inherit;
+    white-space: nowrap;
+}
+
+body.ef-v4 .brand-text > span {
+    color: var(--v4-green);
+}
+
+@media (max-width: 420px) {
+    body.ef-v4 .brand {
+        gap: 7px;
+    }
+
+    body.ef-v4 .brand-logo {
+        width: 25px;
+        height: 25px;
+        flex-basis: 25px;
+    }
+}
