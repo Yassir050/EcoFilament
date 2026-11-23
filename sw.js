@@ -1,5 +1,5 @@
 
-const CACHE_VERSION = "ecofilament-v2";
+const CACHE_VERSION = "ecofilament-v4";
 const CACHE_NAME = `${CACHE_VERSION}-static`;
 
 const STATIC_ASSETS = [
