@@ -2639,34 +2639,47 @@ body.ef-v4 .visual {
   }
 }
 
-/* EcoFilament - Fix Topbar Logo Size */
-.topbar {
-  min-height: 85px !important;
-  padding: 14px 4% !important;
+/* ECOFILAMENT — FINAL HEADER LOGO FIX */
+
+body.ef-v4 .topbar {
+    min-height: 85px !important;
+    height: 85px !important;
+    padding: 10px 4% !important;
+    box-sizing: border-box;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+body.ef-v4 .topbar .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
 }
 
-.brand-logo {
-  width: 42px !important;
-  height: 42px !important;
-  max-width: 42px !important;
-  max-height: 42px !important;
-  object-fit: contain;
-  flex-shrink: 0;
+body.ef-v4 .topbar .brand img {
+    display: block !important;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    max-width: 42px !important;
+    max-height: 42px !important;
+    object-fit: contain;
+    flex: 0 0 42px;
 }
 
 @media (max-width: 600px) {
-  .topbar {
-    min-height: 65px !important;
-  }
+    body.ef-v4 .topbar {
+        min-height: 65px !important;
+        height: 65px !important;
+    }
 
-  .brand-logo {
-    width: 32px !important;
-    height: 32px !important;
-  }
+    body.ef-v4 .topbar .brand img {
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px !important;
+        min-height: 32px !important;
+        max-width: 32px !important;
+        max-height: 32px !important;
+        flex-basis: 32px;
+    }
 }
